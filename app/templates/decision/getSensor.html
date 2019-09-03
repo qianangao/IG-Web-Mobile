@@ -1,0 +1,63 @@
+{%extends "base.html"%}
+{%block app_content%}
+<!-- <canvas id="myChart">   
+</canvas> -->
+<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
+    <caption>感知分布</caption>
+    <tbody>
+        {%for item in data.result.list%}
+        <tr class="info">
+            {%if item.code=='hr'%}
+            <td>人资系统</td>
+            {% else %}
+            <td>访客系统</td>
+            {% endif %}
+            <td>{{item.name}}</td>
+        </tr>
+        {%endfor%}
+    </tbody>
+</table>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<script>
+    var obj=$('#myDiv');
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //      window.location.href="getSensor";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+            window.location.href="getUserTrend";
+          }else if(X<-10){
+            window.location.href="getDuty";
+          }
+          else{
+           window.location.href="getSensor";
+          }
+        }
+      }
+    })
+</script>
+{%endblock%}

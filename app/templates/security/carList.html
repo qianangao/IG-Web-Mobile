@@ -1,0 +1,132 @@
+{%extends "base.html"%}
+{%block app_content%}
+<div id="myDiv">
+  <h3>一线门岗进出车流</h3>
+<div id="echarts-one" style="width: 600px;">
+</div>
+<div id="echarts-two" style="width: 600px;">
+</div>
+<h3 id="alert">
+</h3>  
+</div>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<script>
+      var obj=$('#myDiv');
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //     window.location.href="carList";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+              window.location.href="carTypeList";
+          }else if(X<-10){
+            window.location.href="userList";
+          }
+          else{
+         window.location.href="carList";
+          }
+        }
+      }
+    })
+var myCharts = $('#echarts-one');
+var myChartsTwo = $('#echarts-two');
+var dataDoor={{dataDoor|safe}}
+var dataTime={{dataTime|safe}}
+console.log(dataDoor)
+console.log(dataTime)
+var inNum=[],
+    dataTimes=[],
+    carNum=[],
+    doorName=[],
+    outNum=[],
+    inNums=[];
+    sum=0;
+for(var i = 0; i < dataDoor.result.reList.length; i++){
+        doorName.push(dataDoor.result.reList[i].doorName);
+        outNum.push(dataDoor.result.reList[i].outNum);
+        inNum.push(dataDoor.result.reList[i].inNum);   
+}
+for(var i=0;i<dataDoor.result.reList.length;i++){
+    sum+=dataDoor.result.reList[i].totalNum;
+    console.log(sum);
+    if(sum==0){     
+        $('#alert').append().html('無數據')
+    }
+}
+for(var i = 0; i < dataTime.result.list.length; i++){
+    carNum.push(dataTime.result.list[i].carNum);
+    inNums.push(dataTime.result.list[i].inNum);
+    dataTimes.push(dataTime.result.list[i].dataTime);
+}
+var options={
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            fontColor:'#FFFFFF'
+          }
+        }
+    }
+var myBarChartOne=new Chart(myCharts,{
+    type:"bar",
+    data:{
+        labels: doorName,
+        datasets: [{
+            label: '进入',
+            data: inNum,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+        },
+        {
+            label: '离开',
+            data: outNum,
+            backgroundColor: 'rgba(255, 0, 255, 0.2)',
+            borderColor: 'rgba(255, 0, 255, 0.2)',
+        }] 
+    },
+    options:options
+})
+ var myBarChartTwo=new Chart(myChartsTwo,{
+    type:"bar",
+    data:{
+        labels: dataTimes,
+        datasets: [{
+            label: '出',
+            data: carNum,
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+        },
+        {
+            label: '进',
+            data: inNums,
+            backgroundColor: 'rgba(255, 0, 255, 0.2)',
+            borderColor: 'rgba(255, 0, 255, 0.2)',
+        }] 
+    },
+    options:options
+})  
+</script>
+{%endblock%}

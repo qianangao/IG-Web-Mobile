@@ -1,0 +1,95 @@
+{%extends "base.html"%}
+{%block app_content%}
+<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
+    <caption>园区安全</caption>
+    <thead>
+        <tr class="info">
+            <th>园区安全天数</th>
+            <th>更新指数</th>
+            <th>昨日安全指数</th>
+            <th>危险指数</th>
+            <th>园区安全指数</th>
+            <th>安全变化文字信息</th>
+        </tr>
+    </thead>  
+    <tbody>
+        <tr>
+            <td>{{data['safeDay']}}</td>
+            <td>{{data['updateIndex']}}</td>
+            <td>{{data['yesSafeIndex']}}</td>
+            <td>{{data['riskLevel']}}</td>
+            <td>{{data['safeIndex']}}</td>
+            <td>{{data['factor']}}</td>
+        </tr>
+    </tbody>
+</table>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<script>
+    /**
+    1.touchstart:  //手指放到屏幕上的时候触发 
+    2.touchmove:  // 手指在屏幕上移动的时候触发 
+    3.touchend:  // 手指从屏幕上拿起的时候触发 
+    4.touchcancel:  // 系统取消touch事件的时候触发
+    touches:当前位于屏幕上的所有手指的列表
+    targetTouches:位于当前DOM元素手指的列表
+    changedTouches:涉及当前事件手指的列表
+    1.client / clientY：// 触摸点相对于浏览器窗口viewport的位置 
+    2.pageX / pageY：// 触摸点相对于页面的位置 
+    3.screenX /screenY：// 触摸点相对于屏幕的位置 
+    page包含滚动位置,client不包含滚动位置,screen则以屏幕为基准.
+    4.identifier： // touch对象的unique ID
+    5.target:DOM元素,是动作所针对的目标 
+    **/
+/**
+获取事件坐标,原生js获取方式:
+    event.touches[0].pageX  &  event.changedTouches[0].pageX  &  event.targetTouches[0].pageX
+jquery获取方式:
+    vent.originalEvent.touches[0].pageX  &  event.originalEvent.changedTouches[0].pageX  &  event.originalEvent.targetTouches[0].pageX
+关于touch触摸事件的触摸列表：
+　　　　touches ：当前位于屏幕上的所有手指的一个列表。
+　　　　targetTouches ：位于当前DOM元素上的手指的一个列表。
+　　　　changedTouches ：涉及当前事件的手指的一个列表。
+    **/
+    var obj=$('#myDiv');
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //    window.location.href="getCampusSecurity";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+             window.location.href="getMap";
+          }else if(X<-10){
+             window.location.href="getAlarm";
+          }
+          else{
+         window.location.href="getCampusSecurity";
+          }
+        }
+      }
+    })
+   
+</script>
+{%endblock%}

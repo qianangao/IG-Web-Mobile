@@ -1,0 +1,677 @@
+{%extends "base.html"%}
+{%block styles%}
+{{super()}}
+<link href="../../static/css/point.css" rel="stylesheet">
+<link rel="stylesheet" href="../../static/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../static/css/daterangepicker.css"> 
+<link rel="stylesheet" href="../../static/css/sweetalert2.min.css"> 
+<style type="text/css">
+    .cn{
+        color:#FFFFFF;
+    }  
+    span.value {
+        width:30%;text-align:left;display:inline-block;
+    }
+    .map{
+        width:400px;
+        height:800px;
+        overflow:auto;
+        z-index:1;
+        top:140px;
+        position: absolute;
+        border: 1px solid #000;
+    }
+
+    .attention {
+        font-weight: bold;
+        position: fixed;
+        top: 150px;
+        right: 0px;
+        z-index: 2;
+        background: #fff;
+        width: 150px;
+        text-align: center;
+        border-radius: 5px;
+        padding-top: 2px;
+    }
+
+    .attention_title {
+    font-size: 14px;
+    }
+
+    .attention_title img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-left: 10px;
+    }
+
+.dlg {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(39, 40, 34, 0.4);
+    z-index: 3;
+    margin: 20px auto;
+    display: none;
+}
+
+.dlg_content {
+    width: 350px;
+    height: 400px;
+    border-radius: 5px;
+    background: #FFFFFF;
+    margin: 30px auto;
+    padding: 10px;
+}
+
+.dlg_content_title {
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.tabContent {
+    border: 1px solid #fff;
+    height: 270px;
+    overflow-y: auto;
+}
+
+.closes {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.closes img {
+    width: 20px;
+    height: 20px;
+}
+</style>
+{%endblock%}
+{% block app_content%}
+    <div class="title linearborder">
+        <span class="cn">園區地圖</span>
+        <div class="pull-right btngroup">
+             <button class="btn btn-sm btn-primary" id="lhCampus">龙华富士康</button> 
+        <button class="btn btn-sm btn-primary" data-toggle="modal" id="SearchBtn">軌跡查詢</button>
+        <button class="btn btn-sm btn-primary" id="cancelTrail">取消轨迹</button>
+         <!--data-target="#search-box"  -->
+        </div>    
+    </div>
+    <div class="modal fade" id="search-box" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" id="search-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h4 class="modal-title">人员查询</h4>   
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="personalID" id="personalID" class="form-control" value="" placeholder="员工编号" required>
+                    <input class="form-control" name="searchDate" id="searchDate" readonly required>
+                    <button type="button" class="btn btn-primary" id="searchsubmit">查询</button>
+                </div>
+                <div class="modal-footer">            
+            <div id="search-result">
+                <ul id="personal-info">
+                    <li class="group"><span class="title">歸屬：</span><span class="value">查詢中...</span></li>
+                    <li class="name"><span class="title">姓名：</span><span class="value">查詢中...</span>
+                    </li>
+                    <li class="sex"><span class="title">性別：</span><span class="value">查詢中...</span></li>
+                    <li class="workid"><span class="title">工號：</span><span class="value">查詢中...</span></li>
+                    <li class="phone"><span class="title">手機：</span><span class="value">查詢中...</span></li>
+                </ul>
+                <button id="showTrack" class="btn btn-primary">
+                    查看移動軌迹
+                </button>
+            </div>
+            </div>    
+            </div>    
+        </div>  
+    </div>
+       <div>
+        <div id="map" class="map">
+    </div>
+    <form class="form-horizontal pull-right attention">
+        <div class="form-group">
+            <p class="attention_title">關注人員
+                <img src="../../static/images/set.png" alt="" onclick= "sets()"/>
+            </p>
+        </div>
+            <table class="table table-striped myAttention">
+           </table>
+           <div class="input-group">
+               <input class="form-control" name="searchFollowDate" id="searchFollowDate" readonly required>
+               <span class="input-group-btn">
+                   <button class="btn btn-default search" class="form-control" id="timeSearch">搜索</button>  
+               </span>
+           </div>
+    </form>
+    </div>
+    <div class="dlg">
+        <div class="dlg_content">
+            <div class="dlg_content_title">
+               <!--  <input type="text" class="form-control" id="inputVals" placeholder="請輸入員工編號或者姓名"> -->
+                <div class="closes"><img src="../../static/images/close.png" alt="" onclick="closes()" /></div>
+            </div>
+            <div class="tabContent">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>序號</th>
+                            <th>姓名</th>
+                            <th>工號</th>
+                            <th>狀態</th>
+                            <th>部門</th>
+                           <!--  <th>職位</th>
+                            <th>管理職</th> -->
+                        </tr>
+                    </thead>
+                    <tbody class="tbodys">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<!-- <script src="../../static/js/hotmap.js"></script> -->
+<script type="text/javascript" src="http://10.132.166.129:8001/kldmap/map/api/?key=631f84b235ce33f88e271019&v=1.0.t"></script>
+<script src="../../static/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../static/js/moment.min.js"></script>
+<script src="../../static/js/sweetalert2.min.js"></script>
+<script src="../../static/js/daterangepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var obj=$('.cn');
+    // var obj=$('.title.linearborder');
+    var X,Y;
+    var name='';
+    var layerId=['start','end'];
+    var tokenId={{token|safe}},
+        ipStr = "http://10.132.166.121:5813/web/";
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //    window.location.href="getMap";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+             window.location.href="userList";
+          }else if(X<-10){
+             window.location.href="getCampusSecurity";
+          }
+          else{
+            window.location.href="getMap";
+        
+          }
+        }
+      }
+    })
+        $('#search-box').hide();
+        $('#search-result').hide();
+        $('#cancelTrail').hide();
+        $('.close').on('click',function(){
+             $("#personalID").val("");
+             $('#search-result').hide();
+             $('#search-box').hide().removeClass("in");
+        })
+        var date=new Date();
+        console.log(date)
+        year=date.getFullYear()
+        month=date.getMonth()
+        tDate=date.getDate()
+        var curMonthDays=new Date(year,month,0).getDate();
+        console.log("上个月一共有"+curMonthDays+"天")
+        console.log("今天是本月第"+date.getDate()+"天")
+        var dateString=year+"-"+(month+1)+"-"+tDate;
+        $('#searchFollowDate').val(dateString);
+        var datatimes={
+                // defaultDate:date,
+                language: 'zh-CN',
+                format: 'yyyy-mm-dd',
+                weekStart: 1, //一周从哪一天开始 0-6 周日到周六
+                todayBtn: 1, //在日期时间选择器组件的底部显示一个 "Today" 按钮用以选择当前日期
+                autoclose: 1,  //当选择一个日期后是否立即关闭此日期选择器
+                todayHighlight: 1,//高亮当前日期
+                startView: 2,//月 日期选择器打开之后首先显示的视图
+                minView: 2, //从月视图开始,选天   0-4 从小时视图开始,选分 -- 从十年视图开始,选年
+                forceParse: 0,  //当选择器关闭的时候，是否强制解析输入框中的值
+                startDate:new Date(date-1000*60*60*24*(tDate+curMonthDays-1)),
+                endDate:date
+            };
+        $('#searchDate').datetimepicker(datatimes);
+        $('#searchFollowDate').datetimepicker(datatimes);
+        
+        //页面地图变量 
+        var mainlayer = {},//园区主域容器
+            trailLayer = {},//轨迹
+            map={},
+            point = [410913200, 81782500],//其他数据没有，先去深圳
+            level = 16;
+
+        //地图
+        function mapinit(point,level){
+            var points = new Careland.Point(point[0], point[1]);// 创建地图中心点
+            var scale=new Careland.Scale();//比例尺控件
+            map = new Careland.Map('map', points, level);//实例化地图对象:元素id,中心点坐标,显示级别
+            map.enableAutoResize();    //启用自动适应容器尺寸变化
+            // map.enableCenterIcon();//启动地图中心点坐标
+            map.addMapControl(scale);
+            map.load();//加载地图
+        }
+        //设置缩放级别
+        function setmapZoom(mapLevel) {
+            map.setZoom(mapLevel);
+        }
+        //龙华园区
+        $('#lhCampus').on('click',function(){
+             if(!$.isEmptyObject(mainlayer)) {
+                    mainlayer.clear();
+                };
+                $.ajax({
+                    url:"../../static/examples/parkscope.json",
+                    type:"GET",
+                    dataType:"json",
+                    success:function(data){
+                        if (data.code == 412) {
+                            console.log("登录超时，请重新登录");
+                            window.location.replace('auth/login.html')
+                        }
+                        else{
+                             mainlayer = new Careland.Layer('polygon', 'main');      //创建多边形面图层
+                            mainlayer.name = "longhua",
+                            map.addLayer(mainlayer);//添加面图层
+                            var fillColor = 'rbga(0,0,0,0)',//填充色
+                                outLineColor = '#584a6e',//边线
+                                fillopacity = 0,//设置透明度 0-1 完全透明-完全不透明
+                                outlineSize = 3,
+                                areaname = "longhuascope",
+                                visible = true;
+                            var areapoints = [];
+                            for (var i = 0; i < data.longhuascope.length; i++) {
+                                areapoints.push(new Careland.Point(data.longhuascope[i][0], data.longhuascope[i][1]));
+                            };
+                            console.log("园区范围数据获取成功");
+                            addMapPolygon(mainlayer, areapoints, fillColor, fillopacity, outlineSize, areaname, outLineColor, visible);
+                            }
+                        },
+                        error: function () { console.log("园区范围数据获取失败")}
+                })
+        })
+    //添加区块
+    function addMapPolygon(arealayer, points, fillColor, fillopacity, outlineSize, name, outLineColor, visible) {
+            var polygon = new Careland.Polygon(); //创建多边形
+            var style = new Careland.PolyStyle({ fillColor: fillColor, opacity: fillopacity, outlineSize: outlineSize, outlineColor: outLineColor }); //设置多边形样式
+            polygon.setPoints(points);  //设置多边形经过的点
+            polygon.setId(name);
+            polygon.setStyle(style);//设置多边形的样式
+            arealayer.add(polygon);//将多边形加入到多边形容器中
+            if (visible == true) {
+                polygon.setVisible(true);
+            } else {
+                polygon.setVisible(false);
+            };
+        }
+    //轨迹查询
+    $('#SearchBtn').on('click',function(){
+        $('#search-box').show().addClass("in");
+        $('#searchsubmit').removeClass("disabled");
+        $('#search-result').hide();
+        $("#personalID").val("");
+        $('#searchDate').val(dateString);
+        $('#searchsubmit').on('click',function(){
+            var pid= $("#personalID").val(),
+                searchdate=$('#searchDate').val(),
+                showTrack=$('#showTrack'),
+                searchResult=$('#search-result'),
+                personalInfo=$('#personal-info'); 
+                if (pid == null || pid == undefined || pid == "") { 
+                    alert("請輸入員工號"); 
+                    return false; 
+                }
+                else if (searchdate == null || searchdate == undefined || searchdate == "") { 
+                    alert("請選擇查詢日期");
+                    return false; 
+                }
+                else {
+                    searchResult.show();
+                    personalInfo.find(".value").html("查詢中...").attr("style", "");
+                    showTrack.addClass("disabled");
+                    searchResult.fadeIn(300);
+                    showTrack.off('click');
+                    $.ajax({
+                        url:'getPersontrail',
+                        type:'POST',
+                        async:false,
+                        dataType:"json",
+                        data:{"employCode": pid},
+                        success:function(data){
+                            if (data.code == 412) {
+                                console.log("登录超时，请重新登录");
+                                window.location.replace('auth/login.html')
+                            }
+                            else if (data.data == null) {
+                                personalInfo.find(".value").html("人员信息获取失败").css({ "color": "#cc2323" });
+                                    } 
+                            else {
+                                personalInfo.find(".value").eq(0).html(data.data.businessGroup);
+                                personalInfo.find(".value").eq(1).html(data.data.employName);
+                                personalInfo.find(".value").eq(2).html(data.data.employ_sex);
+                                personalInfo.find(".value").eq(3).html(data.data.employCode);
+                                personalInfo.find(".value").eq(4).html(data.data.employ_telephone);
+                                showTrack.removeClass("disabled");
+                                showTrack.html('查看轨迹');
+                                showTrack.on('click',function(){
+                                    var pid=$("#personalID").val(),
+                                        searchdate=$('#searchDate').val(),
+                                        showTrack=$('#showTrack');
+                                        $('#searchsubmit').addClass("disabled");
+                                        showTrack.addClass("disabled");
+                                        removeLayerId();
+                                        console.log('移除旧标记');
+                                        var data = {
+                                        "kw": pid,
+                                        "startTime": searchdate+" 00:00:00",
+                                        "endTime": searchdate+" 23:59:59",
+                                        "pagesize": "500"
+                                        }
+                                    personTrail(data);
+                                    showTrack.removeClass("disabled");
+                                    $('#cancelTrail').show();
+
+                                })
+                            }
+                        },
+                        error: function () {
+                                console.log("人员信息获取失败");}
+                    })
+            }    
+        })
+    })
+
+    $('#cancelTrail').on('click',function(){
+         if (trailLayer) {
+            map.removeLayer(trailLayer); 
+            removeLayerId();
+          };
+          $('#cancelTrail').hide();
+    })
+
+    function removeLayerId(){
+        layerId.forEach(function(i){
+            map.removeLayerById(i);
+        })
+    }
+//处理轨迹数据
+function mapTrailData(pointData) {
+    var linepoints = [];
+    for (var i = 0; i < pointData.length; i++) {
+        linepoints.push(new Careland.Point(pointData[i].employLongitude * 3600000, pointData[i].employLatitude * 3600000));
+    };
+    return linepoints;
+}
+
+
+function AddDrawLayerPointFun(point, layerId, img) {
+    map.removeLayerById(layerId);
+    var layer = new Careland.Layer('point', layerId); //创建点图层
+    layer.setIndex(10);
+    map.addLayer(layer); //将图层添加到地图上
+    //创建样式，包括标注点位置的偏移以及文本的偏移
+    var style = new Careland.PointStyle({
+        offsetX: -11,
+        offsetY: -30,
+        textOffsetX: -15,
+        textOffsetY: -0,
+        src: '../../static/images/' + img,
+        selectedSrc: '../../static/images/' + img,
+        fontColor: '#161919'
+    });
+    //创建图片标注点
+    var marker = new Careland.Marker('image');
+    marker.setStyle(style); //设置图片标注点样式
+    marker.setPoint(point); //设置标注点位置
+    layer.add(marker); //将标注点添加到图层上
+}
+
+         //添加折线
+        function addMapPolyling(pointData) {
+            trailLayer = new Careland.Layer('polyline','layer'); //创建折线容器
+            map.addLayer(trailLayer);  //地图添加折线容器
+            var linepoints = new Array(); //设置折线数据数组
+            for (var i = 0; i < pointData.length; i++) {  //添加折线数据
+                linepoints.push(new Careland.Point(pointData[i][0] * 3600000, pointData[i][1] * 3600000));
+            };
+            polyline = new Careland.Polyline(); //创建折线
+            polyline.setPoints(linepoints); //设置折线经过的点
+            polyline.setStyle(new Careland.LineStyle({ color: '#ff0000', size: 4, opacity: 80, type: 'solid' }));
+            //polyline.classList.add('line');                           //设置折线的样式
+            trailLayer.add(polyline);  //容器添加折线
+            var lastPoint = linepoints.length - 1;
+            setTimeout(function () {     //1秒后地图重新定位到最后一个点
+                map.setCenter(linepoints[lastPoint]);
+                setmapZoom(11);
+            }, 1000);
+        }
+    mapinit(point,level);
+    sxFun();
+
+   sets=function () {
+    $(".dlg").show()
+    $(".trRow").remove()
+    var getDepartList = ajaxFun("POST", "area/getDepartList", {})
+    console.log(getDepartList)
+    if (getDepartList.code == 200) {
+        $.each(getDepartList.result.list, function (i, n) {});
+    }
+    //獲取我的關注人員列表
+    var dlggetMyFollowPerson = ajaxFun("POST", "trail/getMyFollowPerson", {})
+    let arr = []
+    //獲取關注人員列表
+    var getFollowPerson = ajaxFun("POST", "trail/getFollowPerson", {})
+    if (getFollowPerson.code == 200) {
+        $.each(getFollowPerson.result.list, function (i, n) {
+            let checkTrue = ""
+            $.each(dlggetMyFollowPerson.result.list, function (s, v) {
+                if (n.employCode == v.employCode) {
+                    checkTrue = "checked";
+                }
+            });
+            let checkBox = "<tr class='trRow'><td><input type='checkbox' " + checkTrue + " onclick='ckCheck(this,&apos;" + n.employCode + "&apos;)'><input type='hidden' class='gouxuan'></td><td>" + (parseInt(i) + 1) + "</td><td>" + n.employName + "</td><td>" + n.employCode + "</td>"
+            var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td><td></td><td></td></tr>"
+            $(".tbodys").append(checkBox + tds)
+            if (n.employStatus == 1) {
+                n.employStatus = "在職"
+            } else {
+                n.employStatus = "離職"
+            }
+        });
+    }
+}
+
+ckCheck=function(obj, codes) {
+    if ($(obj).is(':checked') == false) {
+        let dataObjs = {
+            employCode: codes
+        }
+        var delMyFollowPerson = ajaxFun("POST", "trail/delMyFollowPerson", dataObjs)
+        if (delMyFollowPerson.code == 200) {
+            sxFun()
+        }
+    } else {
+        let dataObj = {
+            employCodeS: codes,
+            systemUserId: ""
+        }
+        var saveMyFollowPerson = ajaxFun("POST", "trail/saveMyFollowPerson", dataObj)
+        if (saveMyFollowPerson.code == 200) {
+            sxFun()
+        }
+    }
+}
+
+function sxFun() {
+    $(".myAttention").find("tr").remove()
+    var getMyFollowPerson = ajaxFun("POST", "trail/getMyFollowPerson", {})
+    if (getMyFollowPerson.code == 200) {
+        $.each(getMyFollowPerson.result.list, function (i, n) {
+            var html = "<tr><td><input type='checkbox' name='rydd' value=" + n.employCode + " onclick='ckCheckBox(this)'><input type='hidden' value=" + n.employCode + " class='hideInput'></td><td>" + n.employName + "</td><td>" + n.employDepart + "</td></tr>"
+            $(".myAttention").append(html)
+        });
+    }
+}
+
+var preObgName="";
+//  勾選請求
+ckCheckBox=function (obj) {
+    obgName = $(obj).next().val()
+    if(preObgName==""){
+        preObgName =obgName
+        console.log('aaaaaa'+preObgName)
+    }
+    flag = true
+    $("input[name='rydd']:checked").each(function(index,element){
+
+        console.log(index,element)
+        console.log(obgName)
+        if(index>0){
+            $("input[value="+preObgName+"]").prop("checked",false)
+            map.removeLayer(trailLayer);
+            preObgName =obgName
+            removeLayerId();
+            console.log("cancel")  
+        }
+        if($("input[value="+obgName+"]").prop('checked')) {  
+            var saveData = {
+                "kw": obgName,
+                "startTime": dateString+" 00:00:00",
+                "endTime": dateString+" 23:59:59",
+                "pagesize": "500"
+                }
+            personTrail(saveData)
+            flag=false
+            console.log("success")
+        }
+    })
+    if(flag){    
+            flag =true
+            preObgName ="";
+            obgName="";
+            map.removeLayer(trailLayer);
+            removeLayerId();
+            console.log('removed')
+    }
+}
+
+function personTrail(dataTrail){
+            var trailData = [];  
+            if (trailLayer) {
+                 map.removeLayer(trailLayer);
+              };
+            var data = ajaxFun("POST", "trail/getPersonTrailList", dataTrail)
+            if (data.code == 412) {
+                console.log("登录超时，请重新登录");
+                window.location.replace('/auth/login.html')
+            }
+            else if(data.code==401){
+                alert("该天沒有產生軌跡");
+                removeLayerId();
+                return;
+            }         
+            else if(data.result[0].gjList.length>0){
+                console.log("人员轨迹获取成功");
+                $('#search-box').hide().removeClass("in");
+                console.log(data.result[0].gjList)
+                for(var i=0;i<data.result[0].gjList.length;i++){
+                    var ll = [data.result[0].gjList[i].employLongitude, data.result[0].gjList[i].employLatitude];
+                    console.log(ll)
+                    trailData.push(ll);
+                }
+                addMapPolyling(trailData);
+                var resData = data.result[0].gjList;
+                var linepoints = mapTrailData(resData);
+                AddDrawLayerPointFun(linepoints[0], layerId[0], 'start.png');
+                AddDrawLayerPointFun(linepoints[linepoints.length - 1], layerId[1], 'end.png');
+            }
+            else {
+                console.log("人员轨迹数据获取失败");
+                alert("人员轨迹数据获取失败");
+                return;
+            };
+        }
+
+    function ajaxFun(type,url,data){
+        var result;
+        $.ajax({
+        type:type,
+        url:ipStr+url,
+        dataType:"json",
+        async:false,
+        headers:{
+            tokenId:tokenId
+        },
+        data:JSON.stringify(data),
+        success:function(data){
+            result=data;
+        },
+        error:function(err){
+            console.log('error')
+        }
+       });
+    return result;
+    }
+
+$('#timeSearch').on('click',function(e){
+    e.preventDefault();
+    map.removeLayer(trailLayer);
+    var times=$('#searchFollowDate').val();
+    if($("input[type='checkbox']").is(":checked")){
+        employCode=$("input[type='checkbox']").val();
+        var saveData = {
+                "kw": employCode,
+                "startTime": times+" 00:00:00",
+                "endTime": times+" 23:59:59",
+                "pagesize": "500"
+                }
+        personTrail(saveData)
+    }
+    else{
+        console.log('没有选择工号')
+        alert('请选择工号')
+        return;
+    }
+})
+
+closes=function() {
+    $(".dlg").hide()
+} 
+
+});
+
+   
+</script>
+{%endblock%}

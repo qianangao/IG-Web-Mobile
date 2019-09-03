@@ -1,0 +1,83 @@
+{%extends "base.html"%}
+{% block app_content%}
+<div id="myDiv">
+ <canvas id="main" style="width: 600px;"></canvas> 
+</div>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+ <script>  
+  var obj=$('#myDiv');
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //      window.location.href="getUserDis";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+            window.location.href="getCampus";
+          }else if(X<-10){
+            window.location.href="getSensor";
+          }
+          else{
+          window.location.href="getUserDis";
+          }
+        }
+      }
+    })
+var parkName={{parkName|safe}}
+var parkUser={{parkUser}}
+var ctx = $("#main");
+var chart=new Chart(ctx,{
+    type:'bar',
+    data:{
+        labels: parkName,
+        datasets: [{
+            label: '人力整体分布',
+            data: parkUser,
+            backgroundColor: 'rgb(100,149,237)',
+            borderColor: 'rgb(100,149,237)',
+        }] 
+    },
+     options: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            fontColor: '#FFFFFF'
+          }
+        },
+         tooltips: {
+          cornerRadius: 0,
+          caretSize: 0,
+          xPadding: 16,
+          yPadding: 10,
+          backgroundColor: 'rgb(100,149,237)',
+          titleFontStyle: 'normal',
+          titleMarginBottom: 15
+        }
+    },
+
+})
+</script>
+{%endblock%}

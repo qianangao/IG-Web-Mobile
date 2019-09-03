@@ -1,0 +1,55 @@
+﻿/*人脸识别设备*/
+.map-device-face{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/2-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-face span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-face:hover span{opacity:1;}
+.map-device-face::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-face:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*刷卡门禁设备*/
+.map-device-card{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/3-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-card span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-card:hover span{opacity:1;}
+.map-device-card::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-card:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*人脸考勤设备*/
+.map-device-faceatte{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/4-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-faceatte span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-faceatte:hover span{opacity:1;}
+.map-device-faceatte::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-faceatte:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*刷卡考勤设备*/
+.map-device-cardatte{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/5-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-cardatte span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-cardatte:hover span{opacity:1;}
+.map-device-cardatte::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-cardatte:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*深眸相机*/
+.map-device-deepcamera{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/6-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-deepcamera span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-deepcamera:hover span{opacity:1;}
+.map-device-deepcamera::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-deepcamera:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*车辆卡口相机*/
+.map-device-carcamera{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/7-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-carcamera span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-carcamera:hover span{opacity:1;}
+.map-device-carcamera::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-carcamera:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*标准相机*/
+.map-device-camera{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/8-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-device-camera span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-device-camera:hover span{opacity:1;}
+.map-device-camera::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-device-camera:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}
+
+/*人员*/
+.map-people{position:absolute; width:30px;height:30px;margin-left:-15px;margin-top:-15px; display:block;background:url(../images/icons/2-01.png) no-repeat center center;background-size:cover;cursor:pointer;z-index:100;}
+.map-people span{color:#000;font-size:12px;opacity: 0;margin-left:30px;line-height:30px;transition:all 0.3s;white-space:nowrap;}
+.map-people:hover span{opacity:1;}
+.map-people::after{content:""; position:absolute;left:0px;top:0px;right:0px;bottom:0px;z-index:90;display:block;background:url(../images/icons/1-01.png) no-repeat center center;background-size:cover;}
+.map-people:hover::after{animation:3s linear 0s infinite spin;-webkit-animation:3s linear 0s infinite spin;}

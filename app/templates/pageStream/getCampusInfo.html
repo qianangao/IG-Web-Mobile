@@ -1,0 +1,92 @@
+{%extends "base.html"%}
+{%block app_content%}
+<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
+    <caption>园区基本信息</caption>
+    <thead>
+        <tr class="info">
+            <th>園區名稱</th>
+            <th>今日園區安全指數或等級</th>
+            <th>今日入園人數</th>
+            <th>今日園區在職人數</th>
+            <th>今日園區訪客人數</th>
+            <th>今日園區車輛進出數</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{data.result['areaName']}}</td>
+            <td>{{data.result['riskLevel']}}</td>
+            <td>{{data.result['personInNum']}}</td>
+            <td>{{data.result['totalUserNum']}}</td>
+            <td>{{data.result['vistorNum']}}</td>
+            <td>{{data.result['carLogNum']}}</td>
+        </tr>
+    </tbody>
+</table>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<script>
+    var obj=$('#myDiv');
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //      window.location.href="getCampusInfo";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+             window.location.href="getAlarmTrend";
+          }else if(X<-10){
+            window.location.href="getDeviceStatus";
+          }
+          else{
+            window.location.href="getCampusInfo";
+          }
+        }
+      }
+    })
+//      var obj=$('#myDiv');
+//     obj.on("touchstart", function(e) {
+// 　　　　e.preventDefault();
+// 　　　　startX = e.originalEvent.changedTouches[0].pageX,
+// 　　　　startY = e.originalEvent.changedTouches[0].pageY;
+// 　　});
+//     obj.on("touchmove", function(e) {
+// 　　　　　  e.preventDefault();
+//     　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+//     　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+//     　　　　X = moveEndX - startX,
+//     　　　　Y = moveEndY - startY;
+
+//     　　　　if ( Math.abs(X) > Math.abs(Y) && X > 0 ) {
+//                 window.location.href="getAlarmTrend";
+//     　　　　}
+//     　　　　else if ( Math.abs(X) > Math.abs(Y) && X < 0 ) {
+//                 window.location.href="getDeviceStatus";
+//     　　　　}
+//     　　　　else{
+//     　　　　　　window.location.href="getCampusInfo";
+//     　　　　}
+//     　　});
+</script>
+{%endblock%}
