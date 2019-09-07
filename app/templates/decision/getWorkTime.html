@@ -1,15 +1,14 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div id="myDiv">
-<h3>安防告警</h3>
-<h3 id="alert"></h3>
-<canvas id="main" style="width: 600px;"></canvas>
+<div style="width:500px;height:1000px;">
+  <h3 id="myDiv">平均工时</h3>
+ <canvas id="myChartTwo" style="width:300px;height:100%;"></canvas>
 </div>
+
 {%endblock%}
 {%block scripts%}
 {{super()}}
-<script>
-    $(document).ready(function() {
+ <script>  
     var obj=$('#myDiv');
     var X,Y;
     obj.on("touchstart", function(e) {
@@ -30,7 +29,7 @@
               e.preventDefault();
            }
            // else{
-           //     window.location.href="getAlarm";
+           //      window.location.href="getCampus";
            // }
     　　});
     obj.on("touchend",function(e){
@@ -38,48 +37,57 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-             window.location.href="getMap";
+            window.location.href="getSafe";
           }else if(X<-10){
-             window.location.href="getDeviceCount";
+            window.location.href="getCampus";
           }
-          else{
-         window.location.href="getAlarm";
+          else if(X>5||X<-5){
+            window.location.href="getworkTime";
           }
         }
       }
-    }) 
-    var data={{data|safe}};
-    var ctx = $("#main");
-if(data.result.list.length===0
-  ){
-     $('#alert').append().html('無告警數據')
-  }
-  else{
-    var alarmType =[];
-var alarmLevel= [];
-for(var i = 0; i < data.result.list.length; i++){
-    alarmType.push(data.result.list[i].alarmType);
-    alarmLevel.push(data.result.list[i].alarmLevel);
-}
+    })
+var parkAttendance={{parkAttendance|safe}};
+var parkName={{parkName|safe}};
+var workTime={{workTime|safe}};
+var averhour=0;
+var total=0;
 
-// var ctx = document.getElementById('main').getContext('2d');
-var chart=new Chart(ctx,{
-    type:'bar',
+for(var i=0;i<workTime.length;i++){
+  averhour+=parseFloat(workTime[i])
+  total+=parseFloat(parkAttendance[i])
+}
+averhour=(averhour/workTime.length).toFixed(2);
+var ctx_two=$("#myChartTwo");
+var chartTwo=new Chart(ctx_two,{
+    type:'horizontalBar',
     data:{
-        labels: alarmName,
+        labels: parkName,
         datasets: [{
-            label: '安防告警',
-            data: alarmLevel,
-            backgroundColor: 'rgb(0, 206, 209)',
-            borderColor: 'rgb(0, 206, 209)',
+            label: '各园区平均工时'+averhour+'H/天',
+            data: workTime,
+            backgroundColor: 'rgb(100,149,237)',
+            borderColor: 'rgb(100,149,237)',
         }] 
     },
      options: {
+      scales:{
+        xAxes:[{
+          position:'top',              
+           // barPercentage: 0.5,
+           //  barThickness: 6,
+           //  maxBarThickness: 8,
+           //  minBarLength: 2,
+           //  gridLines: {
+           //      offsetGridLines: true
+           //  }
+        }]
+      },
         legend: {
           display: true,
           position: 'top',
           labels: {
-            fontColor: 'rgb(0, 206, 209)'
+            fontColor: 'rgb(100,149,237)'
           }
         },
          tooltips: {
@@ -87,15 +95,12 @@ var chart=new Chart(ctx,{
           caretSize: 0,
           xPadding: 16,
           yPadding: 10,
-          backgroundColor: 'rgba(0, 150, 100, 0.9)',
+          backgroundColor: 'rgb(100,149,237)',
           titleFontStyle: 'normal',
           titleMarginBottom: 15
         }
-    },
-
+    }
 })
-  }
-  });
-  
+
 </script>
 {%endblock%}

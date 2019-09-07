@@ -1,5 +1,10 @@
 {%extends "base.html"%}
 {%block app_content%}
+<div>
+<h3 id="myDiv">设备在线状态展示</h3>
+<canvas id="main" style="width: 600px;"></canvas>
+</div>
+<!-- 
 <table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
     <caption>设备在线状态展示</caption>
     <thead>
@@ -24,7 +29,7 @@
         </tr>
         {%endfor%}
     </tbody>
-</table>
+</table> -->
 {%endblock%}
 {%block scripts%}
 {{super()}}
@@ -57,37 +62,69 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-             window.location.href="getCampusInfo";
-          }else if(X<-10){
+             window.location.href="getAlarmTrend";
+          }
+          else if(X<-10){
             window.location.href="getAlarmTrend";
         }
-          else{
+          else if(X>5||X<-5){
             window.location.href="getDeviceStatus";
           }
         }
       }
     })
-//      var obj=$('#myDiv');
-//     obj.on("touchstart", function(e) {
-// 　　　　e.preventDefault();
-// 　　　　startX = e.originalEvent.changedTouches[0].pageX,
-// 　　　　startY = e.originalEvent.changedTouches[0].pageY;
-// 　　});
-//     obj.on("touchmove", function(e) {
-// 　　　　　  e.preventDefault();
-//     　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
-//     　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
-//     　　　　X = moveEndX - startX,
-//     　　　　Y = moveEndY - startY;
-//     　　　　if ( Math.abs(X) > Math.abs(Y) && X > 0 ) {
-//                 window.location.href="getCampusInfo";
-//     　　　　}
-//     　　　　else if ( Math.abs(X) > Math.abs(Y) && X < 0 ) {
-//                 window.location.href="getAlarmTrend";
-//     　　　　}
-//     　　　　else{
-//     　　　　　　window.location.href="getDeviceStatus";
-//     　　　　}
-//     　　});
+  var ctx=$('#main')
+  var data={{data|safe}}
+  console.log(data)
+  var deviceList=[],
+      onLineNum=[],
+      officeLineNum=[];
+  for(var i=0;i<data.result.list.length;i++){
+    if(data.result.list[i].deviceType=='1'){
+      deviceList.push('人脸抓拍设备')
+    }
+    else if(data.result.list[i].deviceType=='2'){
+      deviceList.push('一线门岗设备')
+    }
+    else{
+      deviceList.push('门禁设备')
+    }
+    // deviceList.push(data.result.list[i].deviceType);
+    onLineNum.push(data.result.list[i].onLineNum);
+    officeLineNum.push(data.result.list[i].officeLineNum);
+  }
+  console.log(deviceList)
+  console.log(onLineNum)
+  console.log(officeLineNum)
+var options={
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            fontColor:'#FFFFFF'
+          }
+        }
+    }
+  var myChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:deviceList,
+      datasets:[
+      {
+        label:'在线',
+        data:onLineNum,
+        backgroundColor: 'rgb(100,149,237)',
+        borderColor: 'rgb(100,149,237)',
+      },
+      {
+        label:'离线',
+        data:officeLineNum,
+        backgroundColor: 'rgb(0, 206, 209)',
+        borderColor: 'rgb(0, 206, 209)',
+      }]
+    },
+    options:options
+    
+  })
 </script>
 {%endblock%}

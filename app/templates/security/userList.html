@@ -1,11 +1,13 @@
 {%extends "base.html"%}
 {%block app_content%}
-<div id="myDiv">
-    <h3>一线门岗进出人流</h3>
-<canvas id="echarts-one" style="width: 600px;">
+<div>
+    <h3 id="myDiv">园区门岗人流及基本信息</h3>
+<canvas id="echarts-one" style="width: 600px;height:300px;">
 </canvas>
-<canvas id="echarts-two" style="width: 600px;">
-</canvas> 
+<canvas id="echarts-two" style="width: 600px;height:300px;">
+</canvas>
+<h4>今日入园人数:  {{data.result['personInNum']}}人</h4>
+<h4>今日園區訪客人數:  {{data.result['vistorNum']}}人</h4> 
 </div>
 {%endblock%}
 {%block scripts%}
@@ -39,12 +41,12 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-              window.location.href="carList";
+              window.location.href="/security/getDeviceCount";
           }else if(X<-10){
-              window.location.href="getMap";
+              window.location.href="/security/getMap";
           }
-          else{
-         window.location.href="userList";
+          else if(X>5||X<-5){
+         window.location.href="/security/userList";
           }
         }
       }
@@ -74,6 +76,7 @@ for(var i = 0; i < dataTime.result.list.length; i++){
 console.log(dataTimes)
 console.log(employNum)
 console.log(visitorNum)
+Chart.defaults.global.defaultFontColor = 'white';
 var options={
         legend: {
           display: true,
@@ -88,7 +91,7 @@ var myBarChartOne=new Chart(myCharts,{
     data:{
         labels: doorName,
         datasets: [{
-            label: '进入',
+            label:'进入',
             data: inNum,
             backgroundColor: 'rgb(100,149,237)',
             borderColor: 'rgb(100,149,237)',

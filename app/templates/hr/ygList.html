@@ -1,8 +1,9 @@
 {%extends "base.html"%}
 {% block app_content%}
-<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
-    <thead>
-        <caption>用工分布</caption>
+<div>
+<h3 id="myDiv">用工分布</h3>
+<table class="table table-striped table-bordered table-responsive table-hover" >
+    <thead> 
         <tr class="info">
             <th>名称</th>
             <th>数量</th>
@@ -16,7 +17,8 @@
         </tr>
         {%endfor%}
     </tbody>
-</table>
+</table> 
+</div>
 {%endblock%}
 {%block scripts%}
 {{super()}}

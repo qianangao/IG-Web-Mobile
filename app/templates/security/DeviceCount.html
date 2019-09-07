@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div id="myDiv">
-  <h3>设备抓拍</h3>
-<canvas id="main" style="width: 600px;"></canvas>
+<div>
+  <h3 id="myDiv">设备抓拍</h3>
+<canvas id="main" style="width: 600px;height:600px;"></canvas>
 </div>
 
 {%endblock%}
@@ -37,11 +37,11 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-              window.location.href="getAlarm";
+              window.location.href="getCampusSecurity";
           }else if(X<-10){
-            window.location.href="carTypeList";
+            window.location.href="userList";
           }
-          else{
+          else if(x>5||x<-5){
          window.location.href="getDeviceCount";
           }
         }
@@ -55,6 +55,7 @@ for(var i = 0; i < data.result.list.length; i++){
     num.push(data.result.list[i].totalNum);
 }
 var ctx = $("#main");
+Chart.defaults.global.defaultFontColor = 'white';
 // var ctx = document.getElementById('main').getContext('2d');
 var chart=new Chart(ctx,{
     type:'bar',
@@ -67,26 +68,15 @@ var chart=new Chart(ctx,{
             borderColor: 'rgb(100,149,237)',
         }] 
     },
-     options: {
+     options:{
         legend: {
           display: true,
           position: 'top',
           labels: {
-            fontColor:'#FFFFFF',
-            // fontColor: 'rgb(100,149,237)'
+            fontColor:'#FFFFFF'
           }
-        },
-         tooltips: {
-          cornerRadius: 0,
-          caretSize: 0,
-          xPadding: 16,
-          yPadding: 10,
-          // backgroundColor: 'rgba(0, 150, 100, 0.9)',
-          titleFontStyle: 'normal',
-          titleMarginBottom: 15
         }
-    },
-
+    }
 })
 </script>
 {%endblock%}

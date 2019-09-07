@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div id="myDiv">
- <canvas id="myChartOne"></canvas>
-<canvas id="myChartTwo"></canvas> 
+<div  style="width:500px;height:1000px;">
+  <h3 id="myDiv">出勤人数</h3>
+ <canvas id="myChartOne" style="width:300px;height:100%;"></canvas>
 </div>
 
 {%endblock%}
@@ -37,11 +37,11 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-            window.location.href="getSafe";
+            window.location.href="getworkTime";
           }else if(X<-10){
             window.location.href="getUserDis";
           }
-          else{
+          else if(X>5||X<-5){
             window.location.href="getCampus";
           }
         }
@@ -53,7 +53,6 @@ var workTime={{workTime|safe}};
 var averhour=0;
 var total=0;
 for(var i=0;i<workTime.length;i++){
-  averhour+=parseFloat(workTime[i])
   total+=parseFloat(parkAttendance[i])
 }
 averhour=(averhour/workTime.length).toFixed(2);
@@ -61,7 +60,7 @@ var ctx = $("#myChartOne");
 var ctx_two=$("#myChartTwo");
 var config={
     // type: "horizontalBar",
-    type:"bar",
+    type:"horizontalBar",
     data:{
         labels: parkName,
         datasets: [{
@@ -74,6 +73,18 @@ var config={
     },
      options: {
         responsive:true,
+        scales:{
+        xAxes:[{
+          position:'top',              
+           // barPercentage: 0.5,
+           //  barThickness: 6,
+           //  maxBarThickness: 8,
+           //  minBarLength: 2,
+           //  gridLines: {
+           //      offsetGridLines: true
+           //  }
+        }]
+      },
         legend: {
           display: true,
           position: 'top',

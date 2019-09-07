@@ -4,22 +4,22 @@ import requests
 from ..dataPort import dataPort
 from ..auth.routes import acquire_data
 
-#安防设备
-@security.route('/getDeviceList',methods=['POST'])
-def getDeviceList():
-    if session['token']:
-        pageno=request.form.get("pageno")
-        pagesize=request.form.get("pagesize")
-        devicetype=request.form.get("devicetype")
-        dataload={'pageno':pageno,'pagesize':pagesize,'devicetype':devicetype}
-        print(dataload)
-        r=requests.post(dataPort.part_deviceList,data=json.dumps(dataload))
-        result=r.json()
-        if result['code']==412:
-            flash('登录超时,请重新登录')
-            return render_template('auth/login.html')
-        print(result)
-        return jsonify(result)
+# #安防设备
+# @security.route('/getDeviceList',methods=['POST'])
+# def getDeviceList():
+#     if session['token']:
+#         pageno=request.form.get("pageno")
+#         pagesize=request.form.get("pagesize")
+#         devicetype=request.form.get("devicetype")
+#         dataload={'pageno':pageno,'pagesize':pagesize,'devicetype':devicetype}
+#         print(dataload)
+#         r=requests.post(dataPort.part_deviceList,data=json.dumps(dataload))
+#         result=r.json()
+#         if result['code']==412:
+#             flash('登录超时,请重新登录')
+#             return render_template('auth/login.html')
+#         print(result)
+#         return jsonify(result)
 
 # #人员轨迹
 # @security.route('/getPersontimetrail',methods=['POST'])
@@ -91,16 +91,16 @@ def getDeviceCount():
         data=acquire_data(dataPort.part_facepic)
         print(data)
         return render_template('security/DeviceCount.html',data=data)
-# 车辆类型
-@security.route('/carTypeList')
-def carTypeList():
-    if session['token']:
-        # r=requests.get(dataPort.part_carType)
-        # data=r.json()
-        data=acquire_data(dataPort.part_carType)
-        return render_template('security/carTypeList.html',data=data)
+# # 车辆类型
+# @security.route('/carTypeList')
+# def carTypeList():
+#     if session['token']:
+#         # r=requests.get(dataPort.part_carType)
+#         # data=r.json()
+#         data=acquire_data(dataPort.part_carType)
+#         return render_template('security/carTypeList.html',data=data)
 
-#一线门岗进出车流
+# 一线门岗进出车流
 @security.route('/carList')
 def carList():
     if session['token']:
@@ -110,6 +110,7 @@ def carList():
         # dataTime=rTime.json()
         dataDoor=acquire_data(dataPort.part_cardoorlog)
         dataTime=acquire_data(dataPort.part_cardoorlogT)
+        print(dataDoor)
         return render_template('security/carList.html',dataDoor=dataDoor,dataTime=dataTime)
 
 
@@ -117,15 +118,10 @@ def carList():
 @security.route('/userList')
 def userList():
     if session['token']:
-        # #门岗模式
-        # rDoor=requests.get(dataPort.part_doorlog)
-        # #时间模式
-        # rTime=requests.get(dataPort.part_doorlogT)
-        # dataDoor=rDoor.json()
-        # dataTime=rTime.json()
         dataDoor=acquire_data(dataPort.part_doorlog)
         dataTime=acquire_data(dataPort.part_doorlogT)
-        return render_template('security/userList.html',dataDoor=dataDoor,dataTime=dataTime)
+        data=acquire_data(dataPort.part_index)
+        return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
 
 #园区安全
 @security.route('/getCampusSecurity')
@@ -137,12 +133,12 @@ def getCampusSecurity():
         data=data['result']
         print(data)  
         return render_template('security/getCampusSecurity.html',data=data)
-# 安防告警
-@security.route('/getAlarm')
-def getAlarm():
-    if session['token']:
-        # r=requests.get(dataPort.part_security_warning)
-        # data=r.json()
-        data=acquire_data(dataPort.part_security_warning)
-        return render_template('security/getAlarm.html',data=data)
+# # 安防告警
+# @security.route('/getAlarm')
+# def getAlarm():
+#     if session['token']:
+#         # r=requests.get(dataPort.part_security_warning)
+#         # data=r.json()
+#         data=acquire_data(dataPort.part_security_warning)
+#         return render_template('security/getAlarm.html',data=data)
 

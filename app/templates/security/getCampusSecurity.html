@@ -1,28 +1,32 @@
 {%extends "base.html"%}
+{%block styles%}
+{{super()}}
+<style>
+  table {background-color:#b0c4de;}
+</style>
+{%endblock%}
 {%block app_content%}
-<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
-    <caption>园区安全</caption>
-    <thead>
-        <tr class="info">
-            <th>园区安全天数</th>
-            <th>更新指数</th>
-            <th>昨日安全指数</th>
-            <th>危险指数</th>
-            <th>园区安全指数</th>
-            <th>安全变化文字信息</th>
-        </tr>
-    </thead>  
-    <tbody>
+<div>
+<h3 id="myDiv">园区安全</h3>
+<table class="table  table-bordered table-responsive table-hover">
         <tr>
-            <td>{{data['safeDay']}}</td>
-            <td>{{data['updateIndex']}}</td>
-            <td>{{data['yesSafeIndex']}}</td>
-            <td>{{data['riskLevel']}}</td>
-            <td>{{data['safeIndex']}}</td>
-            <td>{{data['factor']}}</td>
-        </tr>
-    </tbody>
-</table>
+            <td>园区安全天数</td><td>{{data['safeDay']}}</td>
+          </tr>
+          <tr>
+            <td>更新指数</td><td>{{data['updateIndex']}}</td>
+          </tr>
+          <tr>
+            <td>昨日安全指数</td><td>{{data['yesSafeIndex']}}</td>
+          </tr>
+          <tr>
+            <td>危险指数</td> <td>{{data['riskLevel']}}</td>
+          </tr>
+          <tr><td>园区安全指数</td> <td>{{data['safeIndex']}}</td>
+          </tr>
+          <tr><td>安全变化文字信息</td><td>{{data['factor']}}</td>
+          </tr>
+</table> 
+</div>
 {%endblock%}
 {%block scripts%}
 {{super()}}
@@ -82,9 +86,9 @@ jquery获取方式:
           if(X>10){
              window.location.href="getMap";
           }else if(X<-10){
-             window.location.href="getAlarm";
+             window.location.href="getDeviceCount";
           }
-          else{
+          else if(X>5||X<-5){
          window.location.href="getCampusSecurity";
           }
         }

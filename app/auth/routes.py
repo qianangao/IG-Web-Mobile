@@ -32,7 +32,10 @@ def login():
             session['username']=username
             session['token']=token
             print(session['token'])
-            return render_template('base.html')
+            dataDoor=acquire_data(dataPort.part_doorlog)
+            dataTime=acquire_data(dataPort.part_doorlogT)
+            data=acquire_data(dataPort.part_index)
+            return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
 
 @auth.route('/logout')
 def logout():

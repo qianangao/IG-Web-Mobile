@@ -1,7 +1,7 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div id="myDiv">
-<h3>告警趋势</h3>
+<div>
+<h3 id="myDiv">告警趋势</h3>
 <canvas id="main" style="width: 600px;"></canvas>
 </div>
 {%endblock%}
@@ -38,9 +38,9 @@
           if(X>10){
             window.location.href="getDeviceStatus";
           }else if(X<-10){
-            window.location.href="getCampusInfo";
+            window.location.href="getDeviceStatus";
           }
-          else{
+          else if(X>5||X<-5){
             window.location.href="getAlarmTrend";
           }
         }
@@ -55,6 +55,7 @@ for(var i = 0; i < data.result.list[0].eventList.length; i++){
 }
 
 var ctx = $("#main");
+Chart.defaults.global.defaultFontColor = 'white';
 var chart=new Chart(ctx,{
     type:'bar',
     data:{

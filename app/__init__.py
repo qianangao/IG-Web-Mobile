@@ -7,7 +7,6 @@ bootstrap=Bootstrap()
 def create_app():
     app = Flask(__name__)
     app.secret_key = os.urandom(24) #生成一串随机24位的字符
-    app.debug = True
     bootstrap.init_app(app)
 
 

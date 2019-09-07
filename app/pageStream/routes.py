@@ -23,6 +23,7 @@ def getAlarmTrend():
     #     # r=requests.get(dataPort.part_secutrend)
         # data=r.json()
     data=acquire_data(dataPort.part_secutrend)
+    print(data)
     return render_template('pageStream/getAlarmTrend.html',data=data)
     # return render_template('auth/login.html')
 

@@ -1,6 +1,7 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div id="myDiv">
+<div>
+  <h3 id="myDiv">人力整体趋势</h3>
  <canvas id="main" style="width: 600px;"></canvas> 
 </div>
 
@@ -40,7 +41,7 @@
           }else if(X<-10){
             window.location.href="getSensor";
           }
-          else{
+          else if(X>5||X<-5){
          window.location.href="getUserTrend";
           }
         }
@@ -52,7 +53,7 @@ var code =[];
 var names= [];
 console.log(data.result.list)
 for(var i = 0; i < data.result.list.length; i++){
-    code.push(data.result.list[i].code);
+    code.push(data.result.list[i].code+'月');
     names.push(data.result.list[i].name);
 }
 
