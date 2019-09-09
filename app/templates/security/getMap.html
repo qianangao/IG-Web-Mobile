@@ -603,11 +603,14 @@ function personTrail(dataTrail){
          removeLayerId();
       };
     var data = ajaxFun("POST", "trail/getPersonTrailList", dataTrail)
-    // $('.loading').css('display','none');
-    // console.log('加载中11111')
     if (data.code == 412) {
         console.log("登录超时，请重新登录");
         window.location.replace('/auth/login.html')
+    }
+    else if(data.code == 400) {
+        alert('服务器正忙,请稍候再试')
+        // $("input[type='checkbox']").prop("checked",false)
+        return;
     }
     else if(data.code==401){
         alert("该天沒有產生軌跡");
