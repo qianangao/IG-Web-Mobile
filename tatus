@@ -1,0 +1,23 @@
+[33mcommit f06595d1a857298f865eb33cd05bbecdf3a01bf3[m[33m ([m[1;36mHEAD -> [m[1;32mdev-gq[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Wed Sep 11 09:48:25 2019 +0800
+
+    modify personTrail and chartjs format
+
+[33mcommit d89304e282b6363cc7edbe64f8fd1cbc29237fa5[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Mon Sep 9 11:23:32 2019 +0800
+
+    modify getMap.html
+
+[33mcommit 72f1d3ba74905888641b9eeaf4682c7c338b272a[m[33m ([m[1;31morigin/dev-gq[m[33m)[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Sat Sep 7 16:22:04 2019 +0800
+
+    modify chart
+
+[33mcommit 210ad2defbf23845757c57bc3b38a7efffff2395[m
+Author: YOUR NAME <YOU@EXAMPLE.COM>
+Date:   Tue Sep 3 15:10:01 2019 +0800
+
+    add personTrail
