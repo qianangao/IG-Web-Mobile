@@ -16,12 +16,11 @@ def login():
         # password_origin=request.form.get('password')
         # password=hashlib.md5(password_origin.encode(encoding='UTF-8')).hexdigest()
         print(password)
-        headers={'content-type': 'application/json'}
+        # headers={'content-type': 'application/json'}
         dataload={"username":username,"password":password}
-        data=json.dumps(dataload)
-        print(data)
         # dataload={'employCode':username,'accountPassword':password,'accountType':'web'}
-        r=requests.post(dataPort.part_login, data=json.dumps(dataload),headers=headers)
+        # r=requests.post(dataPort.part_login, data=json.dumps(dataload),headers=headers)
+        r=requests.post(dataPort.part_login, data=json.dumps(dataload))
         print(r.json())
         if r.json()['result'] is None:
             flash('Invalid urername or password')

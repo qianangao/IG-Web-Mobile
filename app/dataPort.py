@@ -15,8 +15,8 @@ class dataPort():
     # part_deviceDetail = page_dataport + "/safety/device/detail";#安防设备详情
     # 人資视图
     part_user = page_dataport + "/safety/humancapital/userList";#最近12個月人力分布
-    part_protitle = page_dataport + "/safety/humancapital/zcList"#职称分布
-    part_staff = page_dataport + "/safety/humancapital/ygList"#用工类型
+    part_protitle = page_dataport + "/safety/humancapital/zcList";#职称分布
+    part_staff = page_dataport + "/safety/humancapital/ygList";#用工类型
     # 綜合人流視圖
     part_secutrend = page_dataport + "/safety/alarm/countList"#園區安防告警趨勢
     part_index=page_dataport+"/safety/comprehensive/index"#园区基本信息

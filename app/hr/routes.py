@@ -7,35 +7,17 @@ from ..auth.routes import acquire_data
 @hr.route('/ygList',methods=['GET'])
 def ygList():
     if session['token']:
-        data=acquire_data(dataPort.part_staff)
-        # r=requests.get(dataPort.part_staff)
-        datas=data['result']['list']
-        return render_template('hr/ygList.html',result=datas)
+        headers={'token':session['token']}
+        data=requests.post(dataPort.part_staff, headers=headers)
+        result=data.json()
+        print(result)
+        return render_template('hr/ygList.html',data=result)
 
-@hr.route('/userList',methods=['GET'])
-def userList():
-    if session['token']:
-        # r=requests.get(dataPort.part_user)
-        # data=r.json()
-        data=acquire_data(dataPort.part_user)
-        return render_template('hr/userList.html',data=data)
-
-# 职称分布
 @hr.route('/zcList',methods=['GET'])
 def zcList():
     if session['token']:
-        # r=requests.get(dataPort.part_protitle)
-        data=acquire_data(dataPort.part_protitle)
-        print(data)
-        datas=data['result']['list']
-        print(datas)
-        username=[]
-        count=[]
-        jsonData={}
-        for data in datas:
-            username.append(data['name'])
-            count.append(data['userNum'])
-        jsonData['username']=username
-        jsonData['count']=count
-        content = json.dumps(jsonData)
-        return render_template('hr/zcList.html',result=datas)
+        headers={'token':session['token']}
+        data=requests.post(dataPort.part_protitle, headers=headers)
+        result=data.json()
+        print(result)
+        return render_template('hr/zcList.html',data=result)
