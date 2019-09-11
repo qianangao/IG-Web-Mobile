@@ -53,7 +53,6 @@ body{
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" title="">安全主题
                         <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{url_for('security.getCampusSecurity')}}" title="">园区安全</a></li> 
                             <li><a href="{{url_for('security.getMap')}}" title="">园区地图</a></li>
               <li><a href="{{url_for('security.userList')}}" title="">园区门岗人流及基本信息</a></li>
                 <li><a href="{{url_for('security.getDeviceCount')}}" title="">抓拍数量</a></li>
@@ -104,7 +103,7 @@ body{
     {%endfor%}
   {%endif%}
   {%endwith%}
-  <div style="height:100px">  
+  <div style="height:60px">  
   </div>
   {%block app_content%}
   {%endblock%}

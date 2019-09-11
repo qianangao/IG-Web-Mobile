@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div style="width:500px;height:1000px;">
+<div style="width:360px;height:1000px;">
   <h3 id="myDiv" >人力整体分布</h3>
- <canvas id="main" style="width:300px;height:100%;"></canvas> 
+ <canvas id="main" style="width:360px;height:100%;"></canvas> 
 </div>
 {%endblock%}
 {%block scripts%}
@@ -38,7 +38,7 @@
           if(X>10){
             window.location.href="getCampus";
           }else if(X<-10){
-            window.location.href="getSensor";
+            window.location.href="getUserTrend";
           }
           else if(X>5||X<-5){
           window.location.href="getUserDis";
@@ -51,6 +51,7 @@ var parkUser={{parkUser}}
 console.log(parkName)
 console.log(parkUser)
 var ctx = $("#main");
+Chart.defaults.global.defaultFontColor = 'white';
 var chart=new Chart(ctx,{
     type:'horizontalBar',
     data:{
@@ -66,13 +67,13 @@ var chart=new Chart(ctx,{
       scales:{
         xAxes:[{
           position:'top',              
-           // barPercentage: 0.5,
-           //  barThickness: 6,
-           //  maxBarThickness: 8,
-           //  minBarLength: 2,
-           //  gridLines: {
-           //      offsetGridLines: true
-           //  }
+           barPercentage: 0.5,
+            barThickness: 6,
+            maxBarThickness: 8,
+            minBarLength: 2,
+            gridLines: {
+                offsetGridLines: true
+            }
         }]
       },
         legend: {

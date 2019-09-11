@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div  style="width:500px;height:1000px;">
+<div  style="width:360px;height:1000px;">
   <h3 id="myDiv">出勤人数</h3>
- <canvas id="myChartOne" style="width:300px;height:100%;"></canvas>
+ <canvas id="myChartOne" style="width:360px;height:100%;"></canvas>
 </div>
 
 {%endblock%}
@@ -56,6 +56,7 @@ for(var i=0;i<workTime.length;i++){
   total+=parseFloat(parkAttendance[i])
 }
 averhour=(averhour/workTime.length).toFixed(2);
+Chart.defaults.global.defaultFontColor = 'white';
 var ctx = $("#myChartOne");
 var ctx_two=$("#myChartTwo");
 var config={

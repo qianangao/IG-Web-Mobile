@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="../../static/css/daterangepicker.css"> 
 <link rel="stylesheet" href="../../static/css/sweetalert2.min.css"> 
 <style type="text/css">
+    .linearborder{
+        padding-top:40px;
+    }
     .cn{
         color:#FFFFFF;
     }  
@@ -14,7 +17,7 @@
     }
     .map{
         width:100%;
-        height:800px;
+        height:900px;
         overflow:auto;
         z-index:1;
         top:140px;
@@ -229,7 +232,7 @@ $(document).ready(function() {
           if(X>10){
              window.location.href="userList";
           }else if(X<-10){
-             window.location.href="getCampusSecurity";
+             window.location.href="getDeviceCount";
           }
           else if(X>5||X<-5){
             window.location.href="getMap";
@@ -560,28 +563,25 @@ ckCheckBox=function (obj) {
         console.log('aaaaaa'+preObgName)
     }
     flag = true
-    $("input[name='rydd']:checked").each(function(index,element){
-        console.log(index,element)
-        console.log(obgName)
-        if(index>0){
-            $("input[value="+preObgName+"]").prop("checked",false)
-            map.removeLayer(trailLayer);
-            removeLayerId();
-            preObgName =obgName
-            console.log("cancel")  
-        }
-        if($("input[value="+preObgName+"]").prop('checked')) {  
-            var saveData = {
-                "kw": preObgName,
-                "startTime": dateString+" 00:00:00",
-                "endTime": dateString+" 23:59:59",
-                "pagesize": "500"
-                }
-            personTrail(saveData)
-            flag=false
-            console.log("success")
-        }
-    })
+    if($("input[name='rydd']:checked").length>1){
+        $("input[value="+preObgName+"]").prop("checked",false)
+        map.removeLayer(trailLayer);
+        removeLayerId();
+        preObgName =obgName
+        console.log("cancel")  
+    }
+    if($("input[value="+preObgName+"]").prop('checked')) {  
+        var saveData = {
+            "kw": preObgName,
+            "startTime": dateString+" 00:00:00",
+            "endTime": dateString+" 23:59:59",
+            "pagesize": "500"
+            }
+        console.log(saveData)
+        personTrail(saveData)
+        flag=false
+        console.log("success")
+    }
     if(flag){    
             flag =true
             preObgName ="";
@@ -609,7 +609,8 @@ function personTrail(dataTrail){
     }
     else if(data.code == 400) {
         alert('服务器正忙,请稍候再试')
-        // $("input[type='checkbox']").prop("checked",false)
+        $("input[type='checkbox']").prop("checked",false)
+        preObgName="";
         return;
     }
     else if(data.code==401){

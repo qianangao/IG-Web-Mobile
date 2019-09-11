@@ -4,21 +4,6 @@
 <h3 id="myDiv">感知分布</h3>
 <canvas id="main" style="width: 600px;"></canvas>
 </div>
-<!-- <table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
-    <caption>感知分布</caption>
-    <tbody>
-        {%for item in data.result.list%}
-        <tr class="info">
-            {%if item.code=='hr'%}
-            <td>人资系统</td>
-            {% else %}
-            <td>访客系统</td>
-            {% endif %}
-            <td>{{item.name}}</td>
-        </tr>
-        {%endfor%}
-    </tbody>
-</table> -->
 {%endblock%}
 {%block scripts%}
 {{super()}}

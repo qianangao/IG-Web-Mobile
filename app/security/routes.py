@@ -76,6 +76,7 @@ def getMap():
     if session['token']: 
         print(session['token'])
         return render_template('security/getMap.html',token=json.dumps(session['token']))
+        # return render_template('security/getMap.html',token=json.dumps(session['token']))
 
 # #园区地图
 # @security.route('/getMap',methods=['get'])
@@ -124,15 +125,15 @@ def userList():
         return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
 
 #园区安全
-@security.route('/getCampusSecurity')
-def getCampusSecurity():
-    if session['token']:
-        # r=requests.get(dataPort.part_secuindex)
-        data=acquire_data(dataPort.part_secuindex)
-        print(data)
-        data=data['result']
-        print(data)  
-        return render_template('security/getCampusSecurity.html',data=data)
+# @security.route('/getCampusSecurity')
+# def getCampusSecurity():
+#     if session['token']:
+#         # r=requests.get(dataPort.part_secuindex)
+#         data=acquire_data(dataPort.part_secuindex)
+#         print(data)
+#         data=data['result']
+#         print(data)  
+#         return render_template('security/getCampusSecurity.html',data=data)
 # # 安防告警
 # @security.route('/getAlarm')
 # def getAlarm():

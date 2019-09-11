@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div style="width:500px;height:1000px;">
+<div style="width:350px;height:1000px;">
 <h3 id="myDiv">安全分布</h3>
- <canvas id="myChartOne" style="width:300px;height:100%;"></canvas>
+ <canvas id="myChartOne" style="width:350px;height:100%;"></canvas>
 </div>
 {%endblock%}
 {%block scripts%}
@@ -38,7 +38,7 @@
           if(X>10){
             window.location.href="getSensor";
           }else if(X<-10){
-            window.location.href="getCampus";
+            window.location.href="getworkTime";
           }
           else if(X>5||X<-5){
             window.location.href="getSafe";
@@ -52,6 +52,7 @@
   var safeIndex={{safeIndex|safe}};
   var safeIndexZt={{safeIndexZt|safe}};
   var ctx = $("#myChartOne");
+  Chart.defaults.global.defaultFontColor = 'white';
   var chart=new Chart(ctx,{
       type:'horizontalBar',
       data:{
@@ -90,7 +91,7 @@
         },
         scales:{
         xAxes:[{
-          position:'top',              
+          position:'top',             
         }]
       },
          tooltips: {

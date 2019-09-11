@@ -1,8 +1,8 @@
 {%extends "base.html"%}
 {% block app_content%}
-<div style="width:500px;height:1000px;">
+<div style="width:350px;height:1000px;">
   <h3 id="myDiv">平均工时</h3>
- <canvas id="myChartTwo" style="width:300px;height:100%;"></canvas>
+ <canvas id="myChartTwo" style="width:350px;height:100%;"></canvas>
 </div>
 
 {%endblock%}
@@ -58,6 +58,7 @@ for(var i=0;i<workTime.length;i++){
   total+=parseFloat(parkAttendance[i])
 }
 averhour=(averhour/workTime.length).toFixed(2);
+Chart.defaults.global.defaultFontColor = 'white';
 var ctx_two=$("#myChartTwo");
 var chartTwo=new Chart(ctx_two,{
     type:'horizontalBar',
@@ -73,14 +74,10 @@ var chartTwo=new Chart(ctx_two,{
      options: {
       scales:{
         xAxes:[{
-          position:'top',              
-           // barPercentage: 0.5,
-           //  barThickness: 6,
-           //  maxBarThickness: 8,
-           //  minBarLength: 2,
-           //  gridLines: {
-           //      offsetGridLines: true
-           //  }
+          position:'top', 
+          ticks:{
+             min:5 
+            }             
         }]
       },
         legend: {
