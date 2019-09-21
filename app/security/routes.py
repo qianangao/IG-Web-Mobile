@@ -1,8 +1,8 @@
-from flask import render_template,redirect,request,url_for,flash,session,json,jsonify,current_app
+from flask import render_template,redirect,g,request,url_for,flash,session,json,jsonify,current_app
 from app.security import security
 import requests
 from ..dataPort import dataPort
-from ..auth.routes import acquire_data
+from ..auth.routes import acquire_data,rs
 
 # #安防设备
 # @security.route('/getDeviceList',methods=['POST'])
@@ -41,18 +41,19 @@ from ..auth.routes import acquire_data
 #人员详情
 @security.route('/getPersontrail',methods=['POST'])
 def getPersontrail():
-    if session['token']:
-        employCode = request.form.get("employCode")
-        print(employCode)
-        headers={'content-type': 'application/json','token':session['token']}
-        dataload={'employCode':employCode}
-        r=requests.post(dataPort.part_persontrail, data=json.dumps(dataload),headers=headers)
-        employ=r.json()
-        if employ['code']==412:
-            flash('登录超时,请重新登录')
-            return render_template('auth/login.html')
-        print(employ)
-        return jsonify(employ)
+    # if session['token']:
+    employCode = request.form.get("employCode")
+    print(employCode)
+    headers={'content-type': 'application/json','token':gloVal.token}
+    # headers={'content-type': 'application/json','token':session['token']}
+    dataload={'employCode':employCode}
+    r=requests.post(dataPort.part_persontrail, data=json.dumps(dataload),headers=headers)
+    employ=r.json()
+    if employ['code']==412:
+        flash('登录超时,请重新登录')
+        return render_template('auth/login.html')
+    print(employ)
+    return jsonify(employ)
 #关注人员
 # @security.route('/getMyFollow',methods=['POST'])
 # def getMyFollow():
@@ -73,11 +74,17 @@ def getPersontrail():
 #园区地图
 @security.route('/getMap',methods=['get'])
 def getMap():
-    if session['token']: 
+    if session.get('token')==None:
+        print('nullNULL')
+        flash('token超时,请重新登录')
+        return render_template('auth/login.html')
+    elif session['token']==rs.get(session['username']):
         print(session['token'])
         return render_template('security/getMap.html',token=json.dumps(session['token']))
         # return render_template('security/getMap.html',token=json.dumps(session['token']))
-
+    else:
+        flash('请重新登录')
+        return render_template('auth/login.html')
 # #园区地图
 # @security.route('/getMap',methods=['get'])
 # def getMap():
@@ -86,12 +93,15 @@ def getMap():
 #路口抓拍
 @security.route('/getDeviceCount',methods=['get'])
 def getDeviceCount():
-    if session['token']:
+    # if session['token']:
         # r=requests.get(dataPort.part_facepic)
         # data=r.json()
-        data=acquire_data(dataPort.part_facepic)
-        print(data)
+    data=acquire_data(dataPort.part_facepic)
+    if(data!=None):
         return render_template('security/DeviceCount.html',data=data)
+    else:
+        flash('token超时,请重新登录')
+        return render_template('auth/login.html')
 # # 车辆类型
 # @security.route('/carTypeList')
 # def carTypeList():
@@ -102,27 +112,30 @@ def getDeviceCount():
 #         return render_template('security/carTypeList.html',data=data)
 
 # 一线门岗进出车流
-@security.route('/carList')
-def carList():
-    if session['token']:
-        # rDoor=requests.get(dataPort.part_cardoorlog)
-        # rTime=requests.get(dataPort.part_cardoorlogT)
-        # dataDoor=rDoor.json()
-        # dataTime=rTime.json()
-        dataDoor=acquire_data(dataPort.part_cardoorlog)
-        dataTime=acquire_data(dataPort.part_cardoorlogT)
-        print(dataDoor)
-        return render_template('security/carList.html',dataDoor=dataDoor,dataTime=dataTime)
+# @security.route('/carList')
+# def carList():
+#     if session['token']:
+#         # rDoor=requests.get(dataPort.part_cardoorlog)
+#         # rTime=requests.get(dataPort.part_cardoorlogT)
+#         # dataDoor=rDoor.json()
+#         # dataTime=rTime.json()
+#         dataDoor=acquire_data(dataPort.part_cardoorlog)
+#         dataTime=acquire_data(dataPort.part_cardoorlogT)
+#         print(dataDoor)
+#         return render_template('security/carList.html',dataDoor=dataDoor,dataTime=dataTime)
 
 
 #一线门岗进出人流
 @security.route('/userList')
 def userList():
-    if session['token']:
-        dataDoor=acquire_data(dataPort.part_doorlog)
-        dataTime=acquire_data(dataPort.part_doorlogT)
-        data=acquire_data(dataPort.part_index)
+    dataDoor=acquire_data(dataPort.part_doorlog)
+    dataTime=acquire_data(dataPort.part_doorlogT)
+    data=acquire_data(dataPort.part_index)
+    if(data!=None and dataTime!=None and dataDoor!=None):
         return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
+    else:
+        flash('token超时,请重新登录')
+        return render_template('auth/login.html')
 
 #园区安全
 # @security.route('/getCampusSecurity')

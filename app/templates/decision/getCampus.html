@@ -58,7 +58,6 @@ for(var i=0;i<workTime.length;i++){
 averhour=(averhour/workTime.length).toFixed(2);
 Chart.defaults.global.defaultFontColor = 'white';
 var ctx = $("#myChartOne");
-var ctx_two=$("#myChartTwo");
 var config={
     // type: "horizontalBar",
     type:"horizontalBar",
@@ -105,36 +104,6 @@ var config={
     }
 };
 var chart=new Chart(ctx,config);
-var chartTwo=new Chart(ctx_two,{
-    type:'bar',
-    data:{
-        labels: parkName,
-        datasets: [{
-            label: '各园区平均工时'+averhour+'H/天',
-            data: workTime,
-            backgroundColor: 'rgb(100,149,237)',
-            borderColor: 'rgb(100,149,237)',
-        }] 
-    },
-     options: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            fontColor: 'rgb(100,149,237)'
-          }
-        },
-         tooltips: {
-          cornerRadius: 0,
-          caretSize: 0,
-          xPadding: 16,
-          yPadding: 10,
-          backgroundColor: 'rgb(100,149,237)',
-          titleFontStyle: 'normal',
-          titleMarginBottom: 15
-        }
-    }
-})
 // setInterval(function(){
 //   if(config.data.datasets.length>0){
 //     var last=parseInt([parkName.length-1]);

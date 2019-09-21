@@ -2,8 +2,8 @@
 {%block app_content%}
 <div>
     <h3 id="myDiv">园区门岗人流及基本信息</h3>
-    <h4>今日入园人数:  {{data.result['personInNum']}}人</h4>
-<h4>今日園區訪客人數:  {{data.result['vistorNum']}}人</h4> 
+  <h4>今日入园人数: {{data.result['personInNum']}}人</h4>
+<h4>今日園區訪客人數: {{data.result['vistorNum']}}人</h4> 
 <canvas id="echarts-one" style="width: 600px;height:400px;">
 </canvas>
 <canvas id="echarts-two" style="width: 600px;height:400px;">
@@ -56,6 +56,8 @@ var myCharts = $('#echarts-one');
 var myChartsTwo = $('#echarts-two');
 var dataDoor={{dataDoor|safe}}
 var dataTime={{dataTime|safe}}
+console.log(dataTime)
+console.log(dataDoor)
 var employNum=[],
     dataTimes=[],
     visitorNum=[],

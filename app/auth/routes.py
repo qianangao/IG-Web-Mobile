@@ -1,11 +1,16 @@
-from flask import render_template,redirect,request,url_for,flash,g,session,json,make_response,jsonify,Response,current_app
+from flask import render_template,redirect,g,request,url_for,flash,g,session,json,make_response,jsonify,Response,current_app
 import hashlib
 import datetime
 from app.auth import auth
 import requests
 from ..dataPort import dataPort
+from ..globalVal import gloVal
+import redis
+from functools import wraps
 
+rs=redis.Redis(host='10.132.166.125',port=6379,decode_responses=True)
 
+tokenId=""
 @auth.route('/login.html',methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -30,11 +35,17 @@ def login():
             session.clear()
             session['username']=username
             session['token']=token
-            print(session['token'])
+            rs.set(username,token)
+            print(rs)
+            tokenId=rs.get(session['username'])
             dataDoor=acquire_data(dataPort.part_doorlog)
             dataTime=acquire_data(dataPort.part_doorlogT)
             data=acquire_data(dataPort.part_index)
-            return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
+            if(dataDoor!=None and dataTime!=None and data!=None):
+                return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
+            else:
+                flash('token超时,请重新登录')
+                return render_template('auth/login.html')
 
 @auth.route('/logout')
 def logout():
@@ -50,11 +61,16 @@ def logout():
     return render_template('auth/login.html')
 
 def acquire_data(url):
-    r=requests.get(url)
-    data=r.json()
-    if data['msg']=="成功":
-        # return jsonify(data)
-        return data
-    flash('登录超时,请重新登录')
-    # return 'toekn超时'
-    return render_template('auth/login.html')
+    if session.get('token')==None:
+        return None
+    elif session['token']==rs.get(session.get('username')):
+        print('"tokenId:'+session['token'])
+        r=requests.get(url)
+        data=r.json()
+        print(data)
+        if data['code']=='412' or data['code']=='406':
+            return None
+        if data['msg']=="成功":
+            return data
+    else:
+        return None

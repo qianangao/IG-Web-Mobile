@@ -8,8 +8,6 @@ from ..auth.routes import acquire_data
 @system.route('/getSysStatus')
 def getSysStatus():
     if session['token']:
-        # r=requests.get(dataPort.part_sysStatus)
-        # data=r.json()
         data=acquire_data(dataPort.part_sysStatus)
         return render_template('system/getSysStatus.html',data=data)
 

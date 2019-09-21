@@ -8,8 +8,8 @@
 {%endblock%}
 {%block scripts%}
 {{super()}}
- <script>  
-       var obj=$('#myDiv');
+ <script type="text/javascript">  
+    var obj=$('#myDiv');
     var X,Y;
     obj.on("touchstart", function(e) {
 　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
@@ -46,37 +46,44 @@
           }
         }
       }
-    })
-var data={{data|safe}};
-var deviceName =[];
-var num= [];
-for(var i = 0; i < data.result.list.length; i++){
-    deviceName.push(data.result.list[i].deviceName);
-    num.push(data.result.list[i].totalNum);
-}
-var ctx = $("#main");
-Chart.defaults.global.defaultFontColor = 'white';
-// var ctx = document.getElementById('main').getContext('2d');
-var chart=new Chart(ctx,{
-    type:'bar',
-    data:{
-        labels: deviceName,
-        datasets: [{
-            label: '抓拍数量',
-            data: num,
-            backgroundColor: 'rgb(100,149,237)',
-            borderColor: 'rgb(100,149,237)',
-        }] 
-    },
-     options:{
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            fontColor:'#FFFFFF'
+    });
+  var data={{data|safe}};
+  console.log(data)
+  console.log(typeof(data))
+  var deviceName =[];
+  var num= [];
+  if(data.result.list.length===0){
+    alert('无数据')
+  }
+  else{
+  for(var i = 0; i < data.result.list.length; i++){
+      deviceName.push(data.result.list[i].deviceName);
+      num.push(data.result.list[i].totalNum);
+  }
+  var ctx = $("#main");
+  Chart.defaults.global.defaultFontColor = 'white';
+  // var ctx = document.getElementById('main').getContext('2d');
+  var chart=new Chart(ctx,{
+      type:'bar',
+      data:{
+          labels: deviceName,
+          datasets: [{
+              label: '抓拍数量',
+              data: num,
+              backgroundColor: 'rgb(100,149,237)',
+              borderColor: 'rgb(100,149,237)',
+          }] 
+      },
+       options:{
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              fontColor:'#FFFFFF'
+            }
           }
-        }
-    }
-})
+      }
+  })
+}
 </script>
 {%endblock%}
