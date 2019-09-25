@@ -38,7 +38,7 @@
         right: 0px;
         z-index: 2;
         background: #fff;
-        width: 150px;
+        width: 160px;
         text-align: center;
         border-radius: 5px;
         padding-top: 2px;
@@ -77,11 +77,12 @@
 
 .dlg_content_title {
     border-bottom: 1px solid #E5E5E5;
-    padding-bottom: 10px;
+    padding-bottom: 40px;
     position: relative;
 }
 
 .tabContent {
+    margin:30px auto;
     border: 1px solid #fff;
     height: 270px;
     overflow-y: auto;
@@ -271,7 +272,13 @@ $(document).ready(function() {
         var curMonthDays=new Date(year,month,0).getDate();
         console.log("上个月一共有"+curMonthDays+"天")
         console.log("今天是本月第"+date.getDate()+"天")
-        var dateString=year+"-"+(month+1)+"-"+tDate;
+        if(month<=9){
+            month="0"+(month+1);
+        }
+        else{
+            month=month+1;
+        }
+        var dateString=year+"-"+month+"-"+tDate;
         $('#searchFollowDate').val(dateString);
         var datatimes={
                 // defaultDate:date,
@@ -323,7 +330,7 @@ $(document).ready(function() {
                     success:function(data){
                         if (data.code == 412) {
                             console.log("登录超时，请重新登录");
-                            window.location.replace('auth/login.html')
+                            window.location.replace('/auth/login.html')
                         }
                         else{
                              mainlayer = new Careland.Layer('polygon', 'main');      //创建多边形面图层
@@ -362,6 +369,7 @@ $(document).ready(function() {
         }
     //轨迹查询
     $('#SearchBtn').on('click',function(){
+        preObgName=""
         $("input[type='checkbox']").prop("checked",false)
         $('#search-box').show().addClass("in");
         $('#searchsubmit').removeClass("disabled");
@@ -388,6 +396,7 @@ $(document).ready(function() {
                     // showTrack.addClass("disabled");
                     searchResult.fadeIn(300);
                     showTrack.off('click');
+                    showTrack.addClass("disabled");
                     $.ajax({
                         url:'getPersontrail',
                         type:'POST',
@@ -397,7 +406,7 @@ $(document).ready(function() {
                         success:function(data){
                             if (data.code == 412) {
                                 console.log("登录超时，请重新登录");
-                                window.location.replace('auth/login.html')
+                                window.location.replace('/auth/login.html')
                             }
                             else if (data.data == null) {
                                 console.log(data.data)
@@ -409,7 +418,7 @@ $(document).ready(function() {
                                 personalInfo.find(".value").eq(2).html(data.data.employ_sex);
                                 personalInfo.find(".value").eq(3).html(data.data.employCode);
                                 personalInfo.find(".value").eq(4).html(data.data.employ_telephone);
-                                // showTrack.removeClass("disabled");
+                                showTrack.removeClass("disabled");
                                 showTrack.html('查看轨迹');
                                 showTrack.on('click',function(){
                                     var pid=$("#personalID").val(),
@@ -419,12 +428,14 @@ $(document).ready(function() {
                                         showTrack.addClass("disabled");
                                         console.log('移除旧标记');
                                         var data = {
-                                        "kw": pid,
+                                        "employCode": pid,
                                         "startTime": searchdate+" 00:00:00",
-                                        "endTime": searchdate+" 23:59:59",
-                                        "pagesize": "500"
+                                        "endTime": searchdate+" 23:59:59"
+                                        // ,"pagesize": "500"
                                         }
                                     personTrail(data);
+                                    // $('#cancelTrail').show();
+                                    $('#search-box').hide().removeClass("in");
                                     showTrack.removeClass("disabled");
                                     $('#searchsubmit').removeClass("disabled");
                                     // $('#cancelTrail').show();
@@ -509,7 +520,11 @@ function AddDrawLayerPointFun(point, layerId, img) {
    sets=function () {
     $(".dlg").show()
     $(".trRow").remove()
-    var getDepartList = ajaxFun("POST", "area/getDepartList", {})
+    $("input[type='checkbox']").prop("checked",false)
+    map.removeLayer(trailLayer);
+    removeLayerId();
+    preObgName=""
+    var getDepartList = ajaxFun("POST", "area/getDepartList", {})//获取部门信息
     console.log(getDepartList)
     if (getDepartList.code == 200) {
         $.each(getDepartList.result.list, function (i, n) {});
@@ -528,13 +543,15 @@ function AddDrawLayerPointFun(point, layerId, img) {
                 }
             });
             let checkBox = "<tr class='trRow'><td><input type='checkbox' " + checkTrue + " onclick='ckCheck(this,&apos;" + n.employCode + "&apos;)'><input type='hidden' class='gouxuan'></td><td>" + (parseInt(i) + 1) + "</td><td>" + n.employName + "</td><td>" + n.employCode + "</td>"
-            var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td><td></td><td></td></tr>"
-            $(".tbodys").append(checkBox + tds)
             if (n.employStatus == 1) {
                 n.employStatus = "在職"
             } else {
                 n.employStatus = "離職"
             }
+            var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td></tr>"
+            // var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td><td></td><td></td></tr>"
+            $(".tbodys").append(checkBox + tds)
+            
         });
     }
 }
@@ -564,7 +581,7 @@ function sxFun() {
     $(".myAttention").find("tr").remove()
     var getMyFollowPerson = ajaxFun("POST", "trail/getMyFollowPerson", {})
      if(getMyFollowPerson.code==406){
-        alert("请重新登录");
+        alert("请重新登录页面");
         window.location.replace('/auth/login.html');
     }
     else if(getMyFollowPerson.code == 200) {
@@ -580,6 +597,13 @@ var preObgName="";
 ckCheckBox=function (obj) {
     $('#cancelTrail').hide();
     obgName = $(obj).next().val()
+    // obgName = $.trim($(obj).next().val())
+    console.log("obgName:"+obgName+"值")
+    // if(obgName==''){
+    //     alert('工号为空')
+    //     $("input[name='rydd']").prop('checked',false)
+    //     return;
+    // }
     event1=true
     console.log("event001:"+event1)
     if(preObgName==""){
@@ -594,17 +618,19 @@ ckCheckBox=function (obj) {
         preObgName =obgName
         console.log("cancel")  
     }
-    if($("input[value="+preObgName+"]").prop('checked')) {  
-        var saveData = {
-            "kw": preObgName,
+    console.log($("input[value="+preObgName+"]"))
+    if($("input[value="+preObgName+"]").prop("checked")) {
+            var saveData = {
+            "employCode": preObgName,
             "startTime": dateString+" 00:00:00",
-            "endTime": dateString+" 23:59:59",
-            "pagesize": "500"
+            "endTime": dateString+" 23:59:59"
+            // "pagesize": "500"
             }
         console.log(saveData)
         event1=true
         console.log("eventtrue:"+event1)
         personTrail(saveData)
+        $('#cancelTrail').hide();
         flag=false
         console.log("success")
     }
@@ -630,52 +656,78 @@ function personTrail(dataTrail){
          map.removeLayer(trailLayer);
          removeLayerId();
       };
-    var data = ajaxFun("POST", "trail/getPersonTrailList", dataTrail)
-    if (data.code == 412) {
-        console.log("登录超时，请重新登录");
-        window.location.replace('/auth/login.html')
-    }
-    else if(data.code == 400) {
-        alert('服务器正忙,请稍候再试')
-        $("input[type='checkbox']").prop("checked",false)
-        preObgName="";
-        event1=false
-        console.log("eventaaa:"+event1)
-        return;
-    }
-    else if(data.code==401){
-        alert("该天沒有產生軌跡");
-        removeLayerId();
-        event1=false
-        console.log("eventaaa:"+event1)
-        return;
-    }         
-    else if(data.result[0].gjList.length>0){
-        console.log("人员轨迹获取成功");
-        $('#cancelTrail').show();
-        $('#search-box').hide().removeClass("in");
-        console.log(data.result[0].gjList)
-        for(var i=0;i<data.result[0].gjList.length;i++){
-            var ll = [data.result[0].gjList[i].employLongitude, data.result[0].gjList[i].employLatitude];
-            console.log(ll)
-            trailData.push(ll);
+    $.ajax({
+        url:'getPersonTrack',
+        type:'POST',
+        async:false,
+        dataType:"json",
+        data:dataTrail,
+        success:function(data){
+            console.log(data)
+            if(data.code==0){
+                console.log(data.data.list.length)
+                if(data.data.list.length>0){
+                    console.log("人员轨迹获取成功");
+                    $('#cancelTrail').show();
+                    // $('#search-box').hide().removeClass("in");
+                    for(var i=0;i<data.data.list.length;i++){
+                        var ll = [data.data.list[i].employLongitude, data.data.list[i].employLatitude];
+                        console.log(ll)
+                        trailData.push(ll);
+                    }
+                    addMapPolyling(trailData);
+                    var resData = data.data.list;
+                    var linepoints = mapTrailData(resData);
+                    AddDrawLayerPointFun(linepoints[0], layerId[0], 'start.png');
+                    AddDrawLayerPointFun(linepoints[linepoints.length - 1], layerId[1], 'end.png');
+                    event1=false
+                }
+                else{
+                    alert("该天沒有產生軌跡");
+                    removeLayerId();
+                    $('#cancelTrail').hide();
+                    event1=false
+                    console.log("eventaaa:"+event1)
+                    return;
+                }
+            }
+            else if (data.code == 412||data.code ==406) {
+                console.log("登录超时,请重新登录");
+                alert("登录超时了,请重新登录");
+                window.location.replace('/auth/login.html')
+            }
+            else if(data.code == 400) {
+                alert('服务器正忙,请稍候再试')
+                $("input[type='checkbox']").prop("checked",false)
+                preObgName="";
+                event1=false
+                console.log("eventaaa:"+event1)
+                return;
+            }
+            else if(data.code==401){
+                alert("该天沒有產生軌跡");
+                removeLayerId();
+                $('#cancelTrail').hide();
+                event1=false
+                console.log("eventaaa:"+event1)
+                return;
+            } 
+            else {
+                console.log("人员轨迹数据获取失败");
+                alert("人员轨迹数据获取失败");
+                $('#cancelTrail').hide();
+                event1=false
+                console.log("eventaaa:"+event1)
+                return;
+            }
+        },
+        error:function(err){
+            alert("请您重新登录");
+            window.location.replace('/auth/login.html')
         }
-        addMapPolyling(trailData);
-        var resData = data.result[0].gjList;
-        var linepoints = mapTrailData(resData);
-        AddDrawLayerPointFun(linepoints[0], layerId[0], 'start.png');
-        AddDrawLayerPointFun(linepoints[linepoints.length - 1], layerId[1], 'end.png');
-        event1=false
-    }
-    else {
-        console.log("人员轨迹数据获取失败");
-        alert("人员轨迹数据获取失败");
-        event1=false
-        console.log("eventaaa:"+event1)
-        return;
-    };
-    console.log("eventaaa:"+event1)
+    })
 }
+
 
     function ajaxFun(type,url,data){
         var result;
@@ -685,8 +737,14 @@ function personTrail(dataTrail){
         dataType:"json",
         async:false,
         headers:{
-            tokenId:tokenId
+            tokenId:tokenId,
+            // Access-Control-Allow-Origin:*,
+
         },
+        // crossDomain : true,
+        // xhrFields: {
+        //     withCredentials: true
+        // },
         data:JSON.stringify(data),
         success:function(data){
             result=data;
@@ -703,17 +761,19 @@ $('#timeSearch').on('click',function(e){
     event1=true
     console.log("event11:"+event1)
     map.removeLayer(trailLayer);
+    removeLayerId();
     var times=$('#searchFollowDate').val();
     if($("input[type='checkbox']").is(":checked")){
         // employCode=$("input[type='checkbox']").is(":checked").val();
         console.log("employCode"+preObgName);
         var saveData = {
-                "kw": preObgName,
+                "employCode": preObgName,
                 "startTime": times+" 00:00:00",
-                "endTime": times+" 23:59:59",
-                "pagesize": "500"
+                "endTime": times+" 23:59:59"
+                // "pagesize": "500"
                 }
         personTrail(saveData)
+        $('#cancelTrail').hide();
         console.log("event111:"+event1)
     }
     else{

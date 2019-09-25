@@ -24,6 +24,7 @@ PyMySQL = "==0.9.3"
 Werkzeug = "==0.15.4"
 WTForms = "==2.2.1"
 redis = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.6"

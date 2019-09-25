@@ -4,13 +4,11 @@ import datetime
 from app.auth import auth
 import requests
 from ..dataPort import dataPort
-from ..globalVal import gloVal
 import redis
 from functools import wraps
 
 rs=redis.Redis(host='10.132.166.125',port=6379,decode_responses=True)
 
-tokenId=""
 @auth.route('/login.html',methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -20,6 +18,7 @@ def login():
         password=request.form.get('password')
         # password_origin=request.form.get('password')
         # password=hashlib.md5(password_origin.encode(encoding='UTF-8')).hexdigest()
+        print(username)
         print(password)
         # headers={'content-type': 'application/json'}
         dataload={"username":username,"password":password}
@@ -37,14 +36,16 @@ def login():
             session['token']=token
             rs.set(username,token)
             print(rs)
-            tokenId=rs.get(session['username'])
+            print(session.get('token'))
+            print("111111111:"+rs.get(session.get('username')))
+            # tokenId=rs.get(session['username'])
             dataDoor=acquire_data(dataPort.part_doorlog)
             dataTime=acquire_data(dataPort.part_doorlogT)
             data=acquire_data(dataPort.part_index)
             if(dataDoor!=None and dataTime!=None and data!=None):
                 return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
             else:
-                flash('token超时,请重新登录')
+                flash('token过期,请重新登录')
                 return render_template('auth/login.html')
 
 @auth.route('/logout')
@@ -61,16 +62,22 @@ def logout():
     return render_template('auth/login.html')
 
 def acquire_data(url):
-    if session.get('token')==None:
+    if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):
+        flash('token过期,请重新登录')
+        print('token为None,请重新登录')
         return None
-    elif session['token']==rs.get(session.get('username')):
+    elif session.get('token')==rs.get(session.get('username')):
         print('"tokenId:'+session['token'])
         r=requests.get(url)
         data=r.json()
         print(data)
-        if data['code']=='412' or data['code']=='406':
-            return None
         if data['msg']=="成功":
             return data
+        elif data['code']=='412' or data['code']=='406':
+            return None
+        else:
+            return None
     else:
         return None
+
+

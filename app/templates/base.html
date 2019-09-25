@@ -98,9 +98,9 @@ body{
 <div class="container">
     {%with messages=get_flashed_messages()%}
   {%if messages%}
-    {% for message in messages %}
-    <div class="alert alert-info" role="info">{{message}}</div>
-    {%endfor%}
+    <!-- {% for message in messages %} -->
+    <div class="alert alert-info" role="info">{{messages[0]}}</div>
+    <!-- {%endfor%} -->
   {%endif%}
   {%endwith%}
   <div style="height:60px">  

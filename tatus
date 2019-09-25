@@ -1,4 +1,28 @@
-[33mcommit f06595d1a857298f865eb33cd05bbecdf3a01bf3[m[33m ([m[1;36mHEAD -> [m[1;32mdev-gq[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+[33mcommit 53e4acf8ebae21106f469ea0f46c0c2c09ce9672[m[33m ([m[1;36mHEAD -> [m[1;32mdev-gq[m[33m)[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Sat Sep 21 15:20:56 2019 +0800
+
+    modify bug in token
+
+[33mcommit 0b24468d2aa94421a46ba742df091e9e1a9ea641[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Wed Sep 11 15:46:42 2019 +0800
+
+    modify zcList.html and ygList.html
+
+[33mcommit d675cd84fa8b750c9a6263a99d35367595f55768[m[33m ([m[1;31morigin/dev[m[33m)[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Wed Sep 11 10:47:20 2019 +0800
+
+    add .gitignore
+
+[33mcommit b888f9d0e5ec2a7c779e262578125a22dfb33d5c[m
+Author: gaoqi <1819561335@qq.com>
+Date:   Wed Sep 11 10:42:26 2019 +0800
+
+    add .gitignire
+
+[33mcommit f06595d1a857298f865eb33cd05bbecdf3a01bf3[m
 Author: gaoqi <1819561335@qq.com>
 Date:   Wed Sep 11 09:48:25 2019 +0800
 
@@ -10,7 +34,7 @@ Date:   Mon Sep 9 11:23:32 2019 +0800
 
     modify getMap.html
 
-[33mcommit 72f1d3ba74905888641b9eeaf4682c7c338b272a[m[33m ([m[1;31morigin/dev-gq[m[33m)[m
+[33mcommit 72f1d3ba74905888641b9eeaf4682c7c338b272a[m
 Author: gaoqi <1819561335@qq.com>
 Date:   Sat Sep 7 16:22:04 2019 +0800
 

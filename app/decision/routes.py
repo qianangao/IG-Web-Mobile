@@ -11,7 +11,6 @@ def getSensor():
     if(data!=None):
         return render_template('decision/getSensor.html',data=data)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
     
 
@@ -23,7 +22,6 @@ def getUserTrend():
     if(data!=None):
         return render_template('decision/getUserTrend.html',data=data)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
     
 
@@ -48,7 +46,6 @@ def getUserDis():
             parkUser.append(data['parkUser'])
         return render_template('decision/getUserDis.html',parkName=parkName,parkUser=parkUser)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 
 #智慧园区出勤人数
@@ -70,7 +67,6 @@ def getCampus():
         print(data)
         return render_template('decision/getCampus.html',parkAttendance=parkAttendance,parkName=parkName,workTime=workTime)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 #智慧园区平均工时
 @decision.route('/getworkTime')
@@ -90,7 +86,6 @@ def getworkTime():
         print(data)
         return render_template('decision/getWorkTime.html',parkAttendance=parkAttendance,parkName=parkName,workTime=workTime)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 
 
@@ -114,5 +109,4 @@ def getSafe():
             safeIndexZt.append(data['safeIndexZt'])
         return render_template('decision/getSafe.html',safeDay=safeDay,safeDayZt=safeDayZt,parkName=parkName,safeIndex=safeIndex,safeIndexZt=safeIndexZt)         
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')

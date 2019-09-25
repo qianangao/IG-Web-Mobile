@@ -27,9 +27,10 @@ class dataPort():
     part_userTrend = page_dataport + "/safety/boss/userNum" #人力整体趋势
     part_userDis = page_dataport + "/safety/boss/userDis" #人力整体分布
     part_safe = page_dataport + "/safety/boss/safe" #安全分布
-    part_onduty = page_dataport + '/safety/humancapital/index' #考勤
+    part_onduty = page_dataport + "/safety/humancapital/index" #考勤
     # part_iBrain = page_dataport + "/safety/boss/head" #园区智脑
-
+    part_personTrack = "http://10.132.166.121:8022/track/appToAbility/getEmployTarckList/1/40"
+    # part_personTrack = page_dataport +"/track/appToAblity/getEmployTarckList/1/15"
     #运维主题
     # part_sysStatus = page_dataport + "/safety/oper/status" #平台状态
     # part_sysAccess = page_dataport + "/safety/oper/accessStatus" #接入层状态

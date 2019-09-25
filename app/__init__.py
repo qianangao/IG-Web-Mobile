@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_cors import *
 import os
 # app变量被定义为 init .py脚本中的Flask类的一个实例
 bootstrap=Bootstrap()
 
 def create_app():
     app = Flask(__name__)
+    # CORS(app,resources=r'/*')
     app.secret_key = os.urandom(24) #生成一串随机24位的字符
     bootstrap.init_app(app)
 

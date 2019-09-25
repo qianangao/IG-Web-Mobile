@@ -16,7 +16,7 @@ from ..auth.routes import acquire_data,rs
 #         r=requests.post(dataPort.part_deviceList,data=json.dumps(dataload))
 #         result=r.json()
 #         if result['code']==412:
-#             flash('登录超时,请重新登录')
+#             flash('登录过期,请重新登录')
 #             return render_template('auth/login.html')
 #         print(result)
 #         return jsonify(result)
@@ -33,7 +33,7 @@ from ..auth.routes import acquire_data,rs
 #         r=requests.post(dataPort.part_persontimetrail, data=json.dumps(dataload),headers=headers)
 #         result=r.json()
 #         if result['code']==412:
-#             flash('登录超时,请重新登录')
+#             flash('登录过期,请重新登录')
 #             return render_template('auth/login.html')
 #         print(result)
 #         return jsonify(result)
@@ -41,48 +41,64 @@ from ..auth.routes import acquire_data,rs
 #人员详情
 @security.route('/getPersontrail',methods=['POST'])
 def getPersontrail():
-    # if session['token']:
-    employCode = request.form.get("employCode")
-    print(employCode)
-    headers={'content-type': 'application/json','token':gloVal.token}
-    # headers={'content-type': 'application/json','token':session['token']}
-    dataload={'employCode':employCode}
-    r=requests.post(dataPort.part_persontrail, data=json.dumps(dataload),headers=headers)
-    employ=r.json()
-    if employ['code']==412:
-        flash('登录超时,请重新登录')
+    if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):
+        flash('token过期,请重新登录')
+        print('token过期,请重新登录人员详情')
         return render_template('auth/login.html')
-    print(employ)
-    return jsonify(employ)
-#关注人员
-# @security.route('/getMyFollow',methods=['POST'])
-# def getMyFollow():
-#     if session['token']:
-#         # tokenId
-#         # dataload={'employCode':session['username']}
-#         # headers={'content-type': 'application/json','token':session['token']}
-#         headers={'content-type': 'application/json','tokenId':session['token']}
-#         dataload={"pagesize":"15","pageno":"1"}
-#         r=requests.post(dataPort.part_attentionTrail,data=json.dumps(dataload),headers=headers)
-#         employ=r.json()
-#         # if employ['code']==412:
-#         #     flash('登录超时,请重新登录')
-#         #     return render_template('auth/login.html')
-#         print(employ)
-#         return jsonify(employ)
+    elif session.get('token')==rs.get(session.get('username')):
+        employCode = request.form.get("employCode")
+        print(employCode)
+        headers={'content-type': 'application/json','token':rs.get(session.get('username'))}
+        # headers={'content-type': 'application/json','token':session['token']}
+        dataload={'employCode':employCode}
+        r=requests.post(dataPort.part_persontrail, data=json.dumps(dataload),headers=headers)
+        employ=r.json()
+        print(employ)
+        return jsonify(employ)
+    else:
+        flash('请重新登录')
+        return render_template('auth/login.html')
+
+# 人员轨迹
+@security.route('/getPersonTrack',methods=['POST'])
+def getPersonTrack():
+    if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):
+        flash('token过期,请重新登录')
+        print('token过期,请重新登录人员轨迹')
+        return render_template('auth/login.html')
+    elif session.get('token')==rs.get(session.get('username')):
+        # tokenId
+        # dataload={'employCode':session['username']}
+        headers={'content-type': 'application/json','token':session['token']}
+        # headers={'Access-Control-Allow-Origin':'*','content-type': 'application/json','token':session['token']}
+        employCode=request.form.get("employCode")
+        startTime=request.form.get("startTime")
+        endTime=request.form.get("endTime")
+        # dataload={'employCode': 'MS00240', 'startTime': '2019-09-23 00:00:00', 'endTime': '2019-09-23 23:59:59'}
+        dataload = {'employCode': employCode,'startTime': startTime,'endTime': endTime}
+        print(dataload)
+        print(headers)
+        r=requests.post(dataPort.part_personTrack,data=json.dumps(dataload),headers=headers)
+        personTrack=r.json()
+        return jsonify(personTrack)
+    else:
+        flash('请重新登录')
+        print('token过期,请重新登录人员轨迹token出错')
+        return render_template('auth/login.html')
 
 #园区地图
 @security.route('/getMap',methods=['get'])
 def getMap():
-    if session.get('token')==None:
-        print('nullNULL')
-        flash('token超时,请重新登录')
+    print(session.get('token'))
+    if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):
+        flash('token过期,请重新登录')
+        print('token过期,请重新登录地图问题')
         return render_template('auth/login.html')
     elif session['token']==rs.get(session['username']):
-        print(session['token'])
         return render_template('security/getMap.html',token=json.dumps(session['token']))
         # return render_template('security/getMap.html',token=json.dumps(session['token']))
     else:
+        print('请重新登录token问题')
         flash('请重新登录')
         return render_template('auth/login.html')
 # #园区地图
@@ -100,7 +116,6 @@ def getDeviceCount():
     if(data!=None):
         return render_template('security/DeviceCount.html',data=data)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 # # 车辆类型
 # @security.route('/carTypeList')
@@ -134,7 +149,6 @@ def userList():
     if(data!=None and dataTime!=None and dataDoor!=None):
         return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 
 #园区安全

@@ -16,28 +16,17 @@ from ..auth.routes import acquire_data
 # 園區安防告警趨勢
 @stream.route('/getAlarmTrend')
 def getAlarmTrend():
-    # print(session['token'])
-    # print('***************')
-    # if session['token']:
-    #     print('---------------')
-    #     # r=requests.get(dataPort.part_secutrend)
-        # data=r.json()
     data=acquire_data(dataPort.part_secutrend)
     if(data!=None):
         return render_template('pageStream/getAlarmTrend.html',data=data)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
 
 #设备在线状态展示
 @stream.route('/getDeviceStatus')
 def getDeviceStatus():
-    # if session['token']:
-        # r=requests.get(dataPort.part_devicestat)
-        # data=r.json()
     data=acquire_data(dataPort.part_devicestat)
     if(data!=None):
         return render_template('pageStream/getDeviceStatus.html',data=data)
     else:
-        flash('token超时,请重新登录')
         return render_template('auth/login.html')
