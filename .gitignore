@@ -7,5 +7,5 @@ log
 
 *.tar
 !requirements/*.tar
-*.gz
-!requirements/*.gz
+#*.gz
+#@!requirements/*.gz
