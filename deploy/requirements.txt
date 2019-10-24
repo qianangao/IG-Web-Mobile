@@ -8,7 +8,7 @@ Flask-WTF==0.14.2
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10.1
-MarkupSafe==1.1.1
+#MarkupSafe==1.1.1
 PyMySQL==0.9.3
 requests==2.22.0
 urllib3==1.25.3
