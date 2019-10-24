@@ -8,4 +8,4 @@ log
 *.tar
 !requirements/*.tar
 *.gz
-!deploy/requirements/*.gz
+!*requirements
