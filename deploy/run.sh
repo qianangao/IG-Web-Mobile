@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-cd ig-auth-py
+cd ig-web-mobile
 
 python -u main.py
