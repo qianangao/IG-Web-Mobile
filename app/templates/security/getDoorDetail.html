@@ -1,0 +1,127 @@
+{%extends "base.html"%}
+{%block styles%}
+{{super()}}
+<style type="text/css" media="screen">
+/*th{background:#483D8B};#646069;*/
+th,td{color:#FFF;}
+th{
+  background:#3d3152;
+}
+tr:nth-child(odd){
+  background:#37333a; 
+}
+tr:nth-child(even){
+  background:#757272;
+}
+</style>
+
+{%endblock%}
+{% block app_content%}
+<div>
+<h3 id="myDiv">门岗进出人员详情(近10笔)</h3>
+  <select id="mySelect" class="form-control">  
+</select>
+<br>
+<table class="table">
+  <!-- #454d55;#95999c -->
+  <thead>
+    <tr>
+      <th>工号</th>
+      <th>姓名</th>
+      <!-- <th>门岗名称</th> -->
+      <th>进出时间</th>
+      <th>状态</th>
+    </tr>
+  </thead>
+  <tbody id="mybody">
+  </tbody>
+</table>
+
+</div>
+{%endblock%}
+{%block scripts%}
+{{super()}}
+<script>
+  $(document).ready(function() {
+  var obj=$('#myDiv');
+  var gateName={{gateName|safe}};
+  var inDoor={{inDoor|safe}};
+  var outDoor={{outDoor|safe}};
+  var opt='';
+  for(var i=0;i<gateName.length;i++){
+    opt+='<option value="'+gateName[i]+'">'+gateName[i]+'</option>';
+  }
+  $('#mySelect').append(opt);
+  var index=0;
+  function doorInput(index){
+    var tr_in='';
+    var tr_out='';
+    for(var i=0;i<inDoor[index].length;i++){
+      var card=inDoor[index][i].event_card.substr(0,8)+inDoor[index][i].event_card.substr(8).replace(/[\d\D]+/,'*')
+    console.log(card)
+    tr_in+='<tr><td id="employCode" onclick="alertCode(this)" title="'+inDoor[index][i].event_card+'">'+card+'</td>'+'<td>'+inDoor[index][i].person_name+'</td>'+'<td>'+inDoor[index][i].receive_time+'</td>'+'<td>'+"进"+'</td></tr>'
+  }
+  for(var i=0;i<outDoor[index].length;i++){
+    var card_out=outDoor[index][i].event_card.substr(0,8)+outDoor[index][i].event_card.substr(8).replace(/[\d\D]+/,'*')
+    tr_out+='<tr><td id="employCode" onclick="alertCode(this)"  title="'+outDoor[index][i].event_card+'">'+card_out+'</td>'+'<td>'+outDoor[index][i].person_name+'</td>'+'<td>'+outDoor[index][i].receive_time+'</td>'+'<td>'+"出"+'</td></tr>'
+  }
+  $('#mybody').find("tr").remove()
+  console.log(tr_in)
+  console.log(tr_out)
+  $('#mybody').append(tr_in+tr_out)
+  alertCode=function(obj){
+      alert(obj.title)
+      console.log(obj.title)
+  }
+  }
+  doorInput(index);
+  
+  $("#mySelect").on('change',function(){
+    index=$('#mySelect').get(0).selectedIndex;
+    doorInput(index);
+  })
+    var X,Y;
+    obj.on("touchstart", function(e) {
+　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
+　　　　startX = e.originalEvent.changedTouches[0].pageX,
+　　　　startY = e.originalEvent.changedTouches[0].pageY;
+       time=+new Date;//正號(+)是強制轉換為數字的語法
+       isScrolling=0;
+　　});
+    obj.on("touchmove", function(e) {
+          if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
+    　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
+    　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
+    　　　　X = moveEndX - startX,
+    　　　　Y = moveEndY - startY;
+           isScrolling=Math.abs(X)<Math.abs(Y)?1:0;
+           if(isScrolling===0){
+              e.preventDefault();
+           }
+           // else{
+           //     window.location.href="getAlarm";
+           // }
+    　　});
+    obj.on("touchend",function(e){
+      var duration = +new Date -time; //滑动的持续时间
+      if(isScrolling===0){
+        if(Number(duration)>10){
+          if(X>10){
+             window.location.href="getDeviceCount";
+          }else if(X<-10){
+             window.location.href="userList";
+          }
+          else{
+         window.location.href="getDoorDetail";
+          }
+        }
+      }
+    })
+
+  })
+    
+  
+</script>
+{%endblock%}
+
+
