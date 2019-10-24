@@ -1,4 +1,9 @@
 # Python:
 __pycache__/
 *.pyc
-
+venv
+log
+*.tar
+!*requirements/*tar
+*.gz
+!*requirements/*.gz
