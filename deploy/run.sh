@@ -1,3 +1,5 @@
-cd ig-others-api
+#!/usr/bin/env bash
 
-gunicorn -b 0.0.0.0:5000 -w 4 autoapp:app
+cd ig-auth-py
+
+python -u main.py
