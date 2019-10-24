@@ -4,7 +4,7 @@ __pycache__/
 *.pyc
 venv
 log
-*.tar
 !*requirements/*tar
+*.tar
 *.gz
 !*requirements/*.gz
