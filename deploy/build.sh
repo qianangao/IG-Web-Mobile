@@ -25,5 +25,5 @@ rm -rf $name
 #保存docker镜像到本地，并scp
 echo '>>>saving docker image'
 docker save $name:$tag | gzip > $name-$tag.tar.gz
-scp -P 65535 $name-$tag.tar.gz admin@10.132.166.121:/data
+scp -P 65535 $name-$tag.tar.gz admin@10.132.166.122:/data
 
