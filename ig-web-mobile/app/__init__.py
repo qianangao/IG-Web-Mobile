@@ -34,7 +34,7 @@ def create_app():
 
     eureka_client.init(eureka_server="http://10.132.166.121:5012/eureka",
                        app_name="ig-web-mobile",
-                       instance_host='10.132.166.121',
+                       instance_host='10.132.166.122',
                        instance_port=8023,
                        ha_strategy=eureka_client.HA_STRATEGY_RANDOM)
     
