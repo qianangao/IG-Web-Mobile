@@ -48,6 +48,4 @@ def create_app():
     app.register_blueprint(stream_bp,url_prefix='/stream')
     from app.decision import decision as decision_bp
     app.register_blueprint(decision_bp,url_prefix='/decision')
-    from app.system import system as system_bp
-    app.register_blueprint(system_bp,url_prefix='/system')
     return app

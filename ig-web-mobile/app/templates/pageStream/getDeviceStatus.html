@@ -4,32 +4,6 @@
 <h3 id="myDiv">设备在线状态展示</h3>
 <canvas id="main" style="width: 600px;height:500px;"></canvas>
 </div>
-<!-- 
-<table class="table table-striped table-bordered table-responsive table-hover" id="myDiv">
-    <caption>设备在线状态展示</caption>
-    <thead>
-        <tr class="info">
-            <th>设备类型</th>
-            <th>在线</th>
-            <th>离线</th>
-        </tr>
-    </thead>
-    <tbody>
-        {%for item in data.result.list %}
-        <tr>
-            {% if item.deviceType=="1" %}
-            <td>人脸抓拍设备</td>
-            {% elif item.deviceType=="2" %}
-            <td>一线门岗设备</td>
-            {%else%}
-            <td>门禁设备</td>
-            {% endif %}
-            <td>{{item.onLineNum}}</td>
-            <td>{{item.officeLineNum}}</td>
-        </tr>
-        {%endfor%}
-    </tbody>
-</table> -->
 {%endblock%}
 {%block scripts%}
 {{super()}}
@@ -67,8 +41,8 @@
           else if(X<-10){
             window.location.href="getAlarmTrend";
         }
-          else if(X>5||X<-5){
-            window.location.href="getDeviceStatus";
+          else{
+            return false;
           }
         }
       }

@@ -29,7 +29,8 @@ class dataPort():
     part_safe = page_dataport + "/safety/boss/safe" #安全分布
     part_onduty = page_dataport + "/safety/humancapital/index" #考勤
     # part_iBrain = page_dataport + "/safety/boss/head" #园区智脑
-    part_personTrack = "http://10.132.166.121:8022/track/appToAbility/getEmployTarckList/1/40"
+    # part_personTrack = "http://10.132.166.121:8022/track/appToAbility/getEmployTarckList/1/40"
+    part_personTrack = "http://10.132.166.121:5813/others/track/appToAbility/getEmployTrackList/1/40"
     # part_personTrack = page_dataport +"/track/appToAblity/getEmployTarckList/1/15"
     #运维主题
     # part_sysStatus = page_dataport + "/safety/oper/status" #平台状态
@@ -41,7 +42,8 @@ class dataPort():
     # part_sysmicroStatus = page_dataport + "/safety/oper/wStatus" #微服务调用情况
     # part_sysOther = page_dataport + "/safety/oper/otherData" #其他服务
     # 地图接口
-    part_persontrail = "http://10.132.166.121:5814/employs" #人员详情
+    part_persontrail = "http://10.132.166.121:5813/others/employs/getEmploysInfos" #人员详情
+    part_doorDetail = "http://10.132.166.121:5813/others/employs/getGatesInOut" #人员详情
     # part_persontrail = page_dataport + "/safety/person/getEmployDetail"#人员详情
     # part_persontimetrail = page_dataport + "/safety/person/getTrail"#人员轨迹
     # part_deviceList = page_dataport + "/safety/device/list" #设备信息接口

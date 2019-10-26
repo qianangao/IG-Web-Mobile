@@ -6,6 +6,7 @@
 th,td{color:#FFF;}
 th{
   background:#3d3152;
+  text-align: center;
 }
 tr:nth-child(odd){
   background:#37333a; 
@@ -23,12 +24,10 @@ tr:nth-child(even){
 </select>
 <br>
 <table class="table">
-  <!-- #454d55;#95999c -->
   <thead>
     <tr>
       <th>工号</th>
       <th>姓名</th>
-      <!-- <th>门岗名称</th> -->
       <th>进出时间</th>
       <th>状态</th>
     </tr>
@@ -112,7 +111,7 @@ tr:nth-child(even){
              window.location.href="userList";
           }
           else{
-         window.location.href="getDoorDetail";
+            return false;
           }
         }
       }

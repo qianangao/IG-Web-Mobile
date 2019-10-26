@@ -42,12 +42,12 @@
       if(isScrolling===0){
         if(Number(duration)>10){
           if(X>10){
-              window.location.href="/security/getDeviceCount";
+              window.location.href="getDoorDetail";
           }else if(X<-10){
-              window.location.href="/security/getMap";
+              window.location.href="getMap";
           }
-          else if(X>5||X<-5){
-         window.location.href="/security/userList";
+          else{
+              return false;
           }
         }
       }

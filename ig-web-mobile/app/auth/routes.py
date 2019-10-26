@@ -14,39 +14,7 @@ def login():
     if request.method == 'GET':
         return render_template('auth/login.html')
     if request.method == 'POST':
-        username = request.form.get('username')
-        password=request.form.get('password')
-        # password_origin=request.form.get('password')
-        # password=hashlib.md5(password_origin.encode(encoding='UTF-8')).hexdigest()
-        print(username)
-        print(password)
-        # headers={'content-type': 'application/json'}
-        dataload={"username":username,"password":password}
-        # dataload={'employCode':username,'accountPassword':password,'accountType':'web'}
-        # r=requests.post(dataPort.part_login, data=json.dumps(dataload),headers=headers)
-        r=requests.post(dataPort.part_login, data=json.dumps(dataload))
-        print(r.json())
-        if r.json()['result'] is None:
-            flash('Invalid urername or password')
-            return redirect(url_for('auth.login'))
-        else:
-            token=r.json()['result']['tokenId']
-            session.clear()
-            session['username']=username
-            session['token']=token
-            rs.set(username,token)
-            print(rs)
-            print(session.get('token'))
-            print("111111111:"+rs.get(session.get('username')))
-            # tokenId=rs.get(session['username'])
-            dataDoor=acquire_data(dataPort.part_doorlog)
-            dataTime=acquire_data(dataPort.part_doorlogT)
-            data=acquire_data(dataPort.part_index)
-            if(dataDoor!=None and dataTime!=None and data!=None):
-                return render_template('security/userList.html',data=data,dataDoor=dataDoor,dataTime=dataTime)
-            else:
-                flash('token过期,请重新登录')
-                return render_template('auth/login.html')
+        return redirect(url_for('security.userList'))
 
 @auth.route('/logout')
 def logout():
@@ -58,8 +26,8 @@ def logout():
     session.clear()
     session.pop('username',None)
     flash('You were logged out')
-    # return redirect(url_for('auth.login'))
-    return render_template('auth/login.html')
+    return redirect(url_for('auth.login'))
+    # return render_template('auth/login.html')
 
 def acquire_data(url):
     if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):

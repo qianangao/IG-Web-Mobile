@@ -4,15 +4,6 @@ import requests
 from ..dataPort import dataPort
 from ..auth.routes import acquire_data
 
-# #园区基本信息
-# @stream.route('/getCampusInfo')
-# def getCampusInfo():
-#     # if session['token']:
-#         # r=requests.get(dataPort.part_index)
-#         # data=r.json()
-#     data=acquire_data(dataPort.part_index)
-#     return render_template('pageStream/getCampusInfo.html',data=data)
-
 # 園區安防告警趨勢
 @stream.route('/getAlarmTrend')
 def getAlarmTrend():
@@ -20,7 +11,7 @@ def getAlarmTrend():
     if(data!=None):
         return render_template('pageStream/getAlarmTrend.html',data=data)
     else:
-        return render_template('auth/login.html')
+        return redirect(url_for('auth.login'))
 
 #设备在线状态展示
 @stream.route('/getDeviceStatus')
@@ -29,4 +20,4 @@ def getDeviceStatus():
     if(data!=None):
         return render_template('pageStream/getDeviceStatus.html',data=data)
     else:
-        return render_template('auth/login.html')
+        return redirect(url_for('auth.login'))

@@ -208,8 +208,11 @@ $(document).ready(function() {
         ipStr = "http://10.132.166.121:5813/web/";
 
     obj.on("touchstart", function(e) {
-　　　　e.preventDefault();// 使用event.preventDefault()可以取消默认事件
-        // e.stopPropagation();
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+// 　　　　使用event.preventDefault()可以取消默认事件
+//         e.stopPropagation();
         // e.cancelBubel=true;
 　　　　startX = e.originalEvent.changedTouches[0].pageX,
 　　　　startY = e.originalEvent.changedTouches[0].pageY;
@@ -217,6 +220,7 @@ $(document).ready(function() {
        isScrolling=0;
 　　});
     obj.on("touchmove", function(e) {
+       
           if(e.originalEvent.changedTouches.length > 1 || e.originalEvent.scale && e.originalEvent.scale !== 1)return;
           //changedTouches 涉及当前事件的手指的列表  pageX 触摸点相对于页面的位置
     　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
@@ -248,8 +252,8 @@ $(document).ready(function() {
           }else if(X<-10){
              window.location.href="getDeviceCount";
           }
-          else if(X>5||X<-5){
-            window.location.href="getMap";
+          else{
+            return false;
         
           }
         }
@@ -272,11 +276,17 @@ $(document).ready(function() {
         var curMonthDays=new Date(year,month,0).getDate();
         console.log("上个月一共有"+curMonthDays+"天")
         console.log("今天是本月第"+date.getDate()+"天")
-        if(month<=9){
+        if(month<=8){
             month="0"+(month+1);
         }
         else{
             month=month+1;
+        }
+        if(tDate<=9){
+            tDate="0"+tDate;
+        }
+        else{
+            tDate=tDate;
         }
         var dateString=year+"-"+month+"-"+tDate;
         $('#searchFollowDate').val(dateString);
@@ -394,7 +404,7 @@ $(document).ready(function() {
                     searchResult.show();
                     personalInfo.find(".value").html("查詢中...").attr("style", "");
                     // showTrack.addClass("disabled");
-                    searchResult.fadeIn(300);
+                    // searchResult.fadeIn(300);
                     showTrack.off('click');
                     showTrack.addClass("disabled");
                     $.ajax({
@@ -405,7 +415,7 @@ $(document).ready(function() {
                         data:{"employCode": pid},
                         success:function(data){
                             if (data.code == 412) {
-                                console.log("登录超时，请重新登录");
+                                alert("登录超时，请重新登录");
                                 window.location.replace('/auth/login.html')
                             }
                             else if (data.data == null) {
@@ -413,7 +423,7 @@ $(document).ready(function() {
                                 personalInfo.find(".value").html("人员信息获取失败").css({ "color": "#cc2323" });
                                     } 
                             else {
-                                personalInfo.find(".value").eq(0).html(data.data.businessGroup);
+                                personalInfo.find(".value").eq(0).html(data.data.employDepart);
                                 personalInfo.find(".value").eq(1).html(data.data.employName);
                                 personalInfo.find(".value").eq(2).html(data.data.employ_sex);
                                 personalInfo.find(".value").eq(3).html(data.data.employCode);
@@ -444,7 +454,10 @@ $(document).ready(function() {
                             }
                         },
                         error: function () {
-                                console.log("人员信息获取失败");}
+                                console.log("人员信息获取失败");
+                                alert("请重新登录");
+                                window.location.replace('/auth/login.html')
+                            }
                     })
             }    
         })
@@ -549,7 +562,6 @@ function AddDrawLayerPointFun(point, layerId, img) {
                 n.employStatus = "離職"
             }
             var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td></tr>"
-            // var tds = "<td>" + n.employStatus + "</td><td>" + n.employDepart + "</td><td></td><td></td></tr>"
             $(".tbodys").append(checkBox + tds)
             
         });
@@ -570,7 +582,9 @@ ckCheck=function(obj, codes) {
             employCodeS: codes,
             systemUserId: ""
         }
+        console.log(dataObj)
         var saveMyFollowPerson = ajaxFun("POST", "trail/saveMyFollowPerson", dataObj)
+        console.log(saveMyFollowPerson)
         if (saveMyFollowPerson.code == 200) {
             sxFun()
         }
@@ -587,6 +601,7 @@ function sxFun() {
     else if(getMyFollowPerson.code == 200) {
         $.each(getMyFollowPerson.result.list, function (i, n) {
             var html = "<tr><td><input type='checkbox' name='rydd' value=" + n.employCode + " onclick='ckCheckBox(this)'><input type='hidden' value=" + n.employCode + " class='hideInput'></td><td>" + n.employName + "</td><td>" + n.employDepart + "</td></tr>"
+            console.log(html)
             $(".myAttention").append(html)
         });
     }
@@ -597,13 +612,7 @@ var preObgName="";
 ckCheckBox=function (obj) {
     $('#cancelTrail').hide();
     obgName = $(obj).next().val()
-    // obgName = $.trim($(obj).next().val())
     console.log("obgName:"+obgName+"值")
-    // if(obgName==''){
-    //     alert('工号为空')
-    //     $("input[name='rydd']").prop('checked',false)
-    //     return;
-    // }
     event1=true
     console.log("event001:"+event1)
     if(preObgName==""){
@@ -738,8 +747,6 @@ function personTrail(dataTrail){
         async:false,
         headers:{
             tokenId:tokenId,
-            // Access-Control-Allow-Origin:*,
-
         },
         // crossDomain : true,
         // xhrFields: {
@@ -764,13 +771,11 @@ $('#timeSearch').on('click',function(e){
     removeLayerId();
     var times=$('#searchFollowDate').val();
     if($("input[type='checkbox']").is(":checked")){
-        // employCode=$("input[type='checkbox']").is(":checked").val();
         console.log("employCode"+preObgName);
         var saveData = {
                 "employCode": preObgName,
                 "startTime": times+" 00:00:00",
                 "endTime": times+" 23:59:59"
-                // "pagesize": "500"
                 }
         personTrail(saveData)
         $('#cancelTrail').hide();

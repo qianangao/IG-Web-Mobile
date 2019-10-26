@@ -2,9 +2,9 @@
 {% block app_content%}
 <div  style="width:360px;height:1000px;">
   <h3 id="myDiv">出勤人数</h3>
- <canvas id="myChartOne" style="width:360px;height:100%;"></canvas>
+ <canvas id="myChartOne" style="width:360px;height:100%;">
+ </canvas>
 </div>
-
 {%endblock%}
 {%block scripts%}
 {{super()}}
@@ -41,8 +41,8 @@
           }else if(X<-10){
             window.location.href="getUserDis";
           }
-          else if(X>5||X<-5){
-            window.location.href="getCampus";
+          else{
+            return false;
           }
         }
       }
@@ -59,7 +59,6 @@ averhour=(averhour/workTime.length).toFixed(2);
 Chart.defaults.global.defaultFontColor = 'white';
 var ctx = $("#myChartOne");
 var config={
-    // type: "horizontalBar",
     type:"horizontalBar",
     data:{
         labels: parkName,
@@ -104,17 +103,5 @@ var config={
     }
 };
 var chart=new Chart(ctx,config);
-// setInterval(function(){
-//   if(config.data.datasets.length>0){
-//     var last=parseInt([parkName.length-1]);
-//     var label=last+1;
-//     if (last>=40){
-//       label=0;
-//     }
-//     parkName.push(parkName[label]);
-//     parkName.shift();
-//     chart.update();
-//   }
-// },1000)
 </script>
 {%endblock%}
