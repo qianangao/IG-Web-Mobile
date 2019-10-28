@@ -6,7 +6,7 @@ rm -rf *.gz
 #判断是否接收自定义版本号
 if [ $# -eq 0 ]
   then
-    tag='V_0.0.9_P'
+    tag='V_0.0.9.2_P'
   else
     tag=$1
 fi
