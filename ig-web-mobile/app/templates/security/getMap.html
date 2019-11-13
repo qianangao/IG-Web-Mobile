@@ -24,13 +24,6 @@
         position: absolute;
         border: 1px solid #000;
     }
-/*.loading{
-    z-index: 2;
-    position: fixed;
-    top:400px;
-    right:400px;
-    display: none;
-}*/
     .attention {
         font-weight: bold;
         position: fixed;
@@ -107,7 +100,6 @@
              <button class="btn btn-sm btn-primary" id="lhCampus">龙华富士康</button> 
         <button class="btn btn-sm btn-primary" data-toggle="modal" id="SearchBtn">軌跡查詢</button>
         <button class="btn btn-sm btn-primary" id="cancelTrail">取消轨迹</button>
-         <!--data-target="#search-box"  -->
         </div>    
     </div>
     <div class="modal fade" id="search-box" tabindex="-1" role="dialog">
@@ -143,7 +135,6 @@
        <div>
         <div id="map" class="map">      
     </div>
-    <!-- <img class="loading" src="../../static/images/loading.gif" alt=""> -->
     <form class="form-horizontal pull-right attention">
         <div class="form-group">
             <p class="attention_title">關注人員
@@ -163,7 +154,6 @@
     <div class="dlg">
         <div class="dlg_content">
             <div class="dlg_content_title">
-               <!--  <input type="text" class="form-control" id="inputVals" placeholder="請輸入員工編號或者姓名"> -->
                 <div class="closes"><img src="../../static/images/close.png" alt="" onclick="closes()" /></div>
             </div>
             <div class="tabContent">
@@ -176,8 +166,6 @@
                             <th>工號</th>
                             <th>狀態</th>
                             <th>部門</th>
-                           <!--  <th>職位</th>
-                            <th>管理職</th> -->
                         </tr>
                     </thead>
                     <tbody class="tbodys">
@@ -189,7 +177,6 @@
 {%endblock%}
 {%block scripts%}
 {{super()}}
-<!-- <script src="../../static/js/hotmap.js"></script> -->
 <script type="text/javascript" src="http://10.132.166.129:8001/kldmap/map/api/?key=631f84b235ce33f88e271019&v=1.0.t"></script>
 <script src="../../static/js/bootstrap-datetimepicker.min.js"></script> 
 <script src="../../static/js/bootstrap-datetimepicker.zh-CN.js"></script>
@@ -200,7 +187,6 @@ $(document).ready(function() {
     var event1=false;
     console.log("event01:"+event1)
     var obj=$('.cn');
-    // var obj=$('.title.linearborder');
     var X,Y;
     var name='';
     var layerId=['start','end'];
@@ -211,9 +197,6 @@ $(document).ready(function() {
         if (e.cancelable) {
             e.preventDefault();
         }
-// 　　　　使用event.preventDefault()可以取消默认事件
-//         e.stopPropagation();
-        // e.cancelBubel=true;
 　　　　startX = e.originalEvent.changedTouches[0].pageX,
 　　　　startY = e.originalEvent.changedTouches[0].pageY;
        time=+new Date;//正號(+)是強制轉換為數字的語法
@@ -371,6 +354,7 @@ $(document).ready(function() {
             polygon.setId(name);
             polygon.setStyle(style);//设置多边形的样式
             arealayer.add(polygon);//将多边形加入到多边形容器中
+            console.log(arealayer)
             if (visible == true) {
                 polygon.setVisible(true);
             } else {

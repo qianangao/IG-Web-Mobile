@@ -27,7 +27,6 @@ def logout():
     session.pop('username',None)
     flash('You were logged out')
     return redirect(url_for('auth.login'))
-    # return render_template('auth/login.html')
 
 def acquire_data(url):
     if session.get('token')==None or session.get('token')!=rs.get(session.get('username')):

@@ -25,6 +25,9 @@ Werkzeug = "==0.15.4"
 WTForms = "==2.2.1"
 redis = "*"
 flask-cors = "*"
+py-eureka-client = "*"
+pyarmor = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.6"

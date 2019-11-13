@@ -1,6 +1,5 @@
 from flask import Flask, request
 from flask_bootstrap import Bootstrap
-from flask_cors import *
 import os
 from py_eureka_client import eureka_client
 
