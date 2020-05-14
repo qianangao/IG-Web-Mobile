@@ -4,7 +4,7 @@
 ### Python 3.6
 ## Quickstart
 ### 1. Clone
-`git clone http://10.161.32.68/F1054414/IG-web-mobile.git`
+`git clone https://github.com/qianangao/IG-Web-Mobile.git`
 ### 2.Install pipenv 
 `cd IG-web-mobile/ig-web-mobile`
 `pipenv install`
